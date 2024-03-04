@@ -5,9 +5,10 @@ class MainWindow : public wxFrame
 {
 public:
 	//constructor
-	MainWindow(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
+	MainWindow();
 	~MainWindow() {} //destructor
+	void WindowResize(wxSizeEvent&);
 
 private:
-	DrawingPanel* drawingPanel;
+	DrawingPanel* drawingPanel = nullptr; //DrawingPanel* - used to create a DrawingPanel that's a child of the MainWindow
 };

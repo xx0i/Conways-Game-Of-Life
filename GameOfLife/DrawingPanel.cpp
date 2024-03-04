@@ -2,10 +2,15 @@
 #include "wx/graphics.h"
 #include "wx/dcbuffer.h"
 
-DrawingPanel::DrawingPanel(wxWindow* parent) : wxPanel(parent)
+DrawingPanel::DrawingPanel(wxWindow* parent, wxSize size) : wxPanel(parent, wxID_ANY, wxPoint(0,0))
 {
 	this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 	this->Bind(wxEVT_PAINT, &DrawingPanel::OnPaint, this);
+}
+
+void DrawingPanel::setSize(wxSize& size)
+{
+	this->SetSize(size);
 }
 
 void DrawingPanel::OnPaint(wxPaintEvent&)

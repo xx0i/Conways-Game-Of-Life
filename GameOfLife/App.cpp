@@ -17,7 +17,7 @@ bool App::OnInit() {
 	_CrtSetBreakAlloc(-1); // set block of memory to find memory leak
 	_CrtDumpMemoryLeaks();
 
-	MainWindow* mainWindowPtr = new MainWindow(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(200, 200)); //Instantiate the MainWindow pointer
+	MainWindow* mainWindowPtr = new MainWindow(); //Instantiate the MainWindow pointer
 	mainWindowPtr->Show();	//Call the Show() method on the pointer.
 
 	return true;

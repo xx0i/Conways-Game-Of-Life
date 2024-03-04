@@ -4,9 +4,12 @@ class DrawingPanel : public wxPanel
 {
 public:
 	//constructor
-	DrawingPanel(wxWindow* parent);
+	DrawingPanel(wxWindow* parent, wxSize size);
 	~DrawingPanel() {} //destructor
+	void setSize(wxSize&);
+
 private:
 	void OnPaint(wxPaintEvent&); //onPaint method
-	int gridSize = 15;
+	int gridSize = 15; //grid size variable
+
 };
