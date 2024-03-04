@@ -4,6 +4,6 @@ class MainWindow : public wxFrame
 {
 public:
 	//constructor
-	MainWindow(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
+	MainWindow(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize) : wxFrame(parent, id, title, pos, size) {}
 	~MainWindow(){} //destructor
 };
