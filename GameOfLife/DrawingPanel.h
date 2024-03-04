@@ -8,4 +8,5 @@ public:
 	~DrawingPanel() {} //destructor
 private:
 	void OnPaint(wxPaintEvent&); //onPaint method
+	int gridSize = 15;
 };

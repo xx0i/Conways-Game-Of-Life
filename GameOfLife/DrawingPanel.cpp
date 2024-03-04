@@ -19,4 +19,14 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 	graphicsContext->SetPen(*wxBLACK);
 	graphicsContext->SetBrush(*wxWHITE);
 	graphicsContext->DrawRectangle(0.0, 0.0, 200.0, 200.0);
+
+	//creating the grid
+	for (int i = 0; i < gridSize; i++) {
+		for (int j = 0; j < gridSize; j++) {
+			//calculating cell location
+			int x = i * 10;
+			int y = j * 10;
+			graphicsContext->DrawRectangle(x, y, 10, 10);
+		}
+	}
 }
