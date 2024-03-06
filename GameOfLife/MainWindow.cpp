@@ -1,14 +1,32 @@
 #include "MainWindow.h"
+#include "play.xpm"
+#include "pause.xpm"
+#include "next.xpm"
+#include "trash.xpm"
 
 //EVENT TABLE
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 EVT_SIZE(MainWindow::WindowResize)
+EVT_MENU(12789, MainWindow::playEvent)
+EVT_MENU(15731, MainWindow::pauseEvent)
+EVT_MENU(18324, MainWindow::nextEvent)
+EVT_MENU(16430, MainWindow::clearEvent)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
 {
 	statusBar = CreateStatusBar();
 	statusBarUpdate();
+	toolBar = CreateToolBar();
+	wxBitmap playIcon(play_xpm);
+	toolBar->AddTool(12789, "Play", playIcon);
+	wxBitmap pauseIcon(pause_xpm);
+	toolBar->AddTool(15731, "Pause", pauseIcon);
+	wxBitmap nextIcon(next_xpm);
+	toolBar->AddTool(18324, "Next", nextIcon);
+	wxBitmap trashIcon(trash_xpm);
+	toolBar->AddTool(16430, "Clear", trashIcon);
+	toolBar->Realize();
 	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard);
 	gridInitialize();
 	Layout();
@@ -38,4 +56,20 @@ void MainWindow::statusBarUpdate()
 	wxString statusText = wxString::Format("Living Cells: %d, Generations: %d",
 		livingCells, generations);
 	statusBar->SetStatusText(statusText);
+}
+
+void MainWindow::playEvent(wxCommandEvent&)
+{
+}
+
+void MainWindow::pauseEvent(wxCommandEvent&)
+{
+}
+
+void MainWindow::nextEvent(wxCommandEvent&)
+{
+}
+
+void MainWindow::clearEvent(wxCommandEvent&)
+{
 }

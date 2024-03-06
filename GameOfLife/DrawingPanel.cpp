@@ -52,6 +52,7 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 			graphicsContext->DrawRectangle(x, y, cellWidth, cellHeight);
 		}
 	}
+	delete graphicsContext;
 }
 
 void DrawingPanel::setGridSize(int newSize)

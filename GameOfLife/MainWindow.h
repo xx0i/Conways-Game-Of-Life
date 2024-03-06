@@ -20,4 +20,9 @@ private:
 	int generations = 0; //generations int
 	wxStatusBar* statusBar = nullptr; //status bar - initalized in the constructor
 	void statusBarUpdate(); //status bar update logic method
+	wxToolBar* toolBar = nullptr; //tool bar - initalized in the constructor
+	void playEvent(wxCommandEvent&); //command event - called when the play icon is clicked
+	void pauseEvent(wxCommandEvent&); //command event - called when the pause icon is clicked
+	void nextEvent(wxCommandEvent&); //command event - called when the next icon is clicked
+	void clearEvent(wxCommandEvent&); //command event - called when the trash icon is clicked
 };
