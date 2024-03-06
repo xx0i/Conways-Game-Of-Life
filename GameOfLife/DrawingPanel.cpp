@@ -27,8 +27,8 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 
 	//creating the grid
 	wxSize panelSize = this->GetClientSize();
-	int cellWidth = panelSize.GetWidth() / gridSize;
-	int cellHeight = panelSize.GetHeight() / gridSize;
+	float cellWidth = panelSize.GetWidth() / (float)gridSize;
+	float cellHeight = panelSize.GetHeight() / (float)gridSize;
 
 	for (int i = 0; i < gridSize; i++) {
 		for (int j = 0; j < gridSize; j++) {
@@ -39,3 +39,9 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 		}
 	}
 }
+
+void DrawingPanel::setGridSize(int newSize)
+{
+	gridSize = newSize;
+}
+

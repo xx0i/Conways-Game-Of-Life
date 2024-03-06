@@ -3,13 +3,12 @@
 class DrawingPanel : public wxPanel
 {
 public:
-	//constructor
-	DrawingPanel(wxWindow* parent, wxSize size);
+	DrawingPanel(wxWindow* parent, wxSize size); //constructor
 	~DrawingPanel() {} //destructor
-	void setSize(wxSize&);
+	void setSize(wxSize&); //set size method
+	void setGridSize(int newSize); //set grid size method - sets the drawing panel grid size to the same value as the main window grid size
 
 private:
 	void OnPaint(wxPaintEvent&); //onPaint method
-	int gridSize = 15; //grid size variable
-
+	int gridSize = 0; //grid size variable
 };
