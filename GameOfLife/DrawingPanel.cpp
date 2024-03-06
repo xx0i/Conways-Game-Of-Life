@@ -36,6 +36,15 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 			//calculating cell location
 			int x = i * cellWidth;
 			int y = j * cellHeight;
+
+			//rectangle coulour based on true or false
+			if (gameBoardRef[i][j]) {
+				graphicsContext->SetBrush(*wxLIGHT_GREY);
+			}
+			else {
+				graphicsContext->SetBrush(*wxWHITE);
+			}
+
 			graphicsContext->DrawRectangle(x, y, cellWidth, cellHeight);
 		}
 	}
