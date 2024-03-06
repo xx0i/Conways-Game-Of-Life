@@ -2,11 +2,15 @@
 #include "wx/graphics.h"
 #include "wx/dcbuffer.h"
 
-DrawingPanel::DrawingPanel(wxWindow* parent, wxSize size, std::vector<std::vector<bool>>& board) : wxPanel(parent, wxID_ANY, wxPoint(0,0)), gameBoardRef(board)
+//EVENT TABLE
+wxBEGIN_EVENT_TABLE(DrawingPanel, wxPanel)
+EVT_PAINT(DrawingPanel::OnPaint)
+EVT_LEFT_UP(DrawingPanel::mouseEvent)
+wxEND_EVENT_TABLE()
+
+DrawingPanel::DrawingPanel(wxWindow* parent, wxSize size, std::vector<std::vector<bool>>& board) : wxPanel(parent, wxID_ANY, wxPoint(0, 0)), gameBoardRef(board)
 {
 	this->SetBackgroundStyle(wxBG_STYLE_PAINT);
-	this->Bind(wxEVT_PAINT, &DrawingPanel::OnPaint, this); 
-	this->Bind(wxEVT_LEFT_UP, &DrawingPanel::mouseEvent, this);
 }
 
 void DrawingPanel::setSize(wxSize& size)

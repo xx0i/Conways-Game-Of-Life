@@ -2,6 +2,8 @@
 #include "wx/wx.h"
 class DrawingPanel : public wxPanel
 {
+	wxDECLARE_EVENT_TABLE();
+
 public:
 	DrawingPanel(wxWindow* parent, wxSize size, std::vector<std::vector<bool>>& board); //constructor
 	~DrawingPanel() {} //destructor

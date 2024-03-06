@@ -4,6 +4,8 @@
 
 class MainWindow : public wxFrame
 {
+	wxDECLARE_EVENT_TABLE();
+
 public:
 	MainWindow(); //constructor
 	~MainWindow() {} //destructor

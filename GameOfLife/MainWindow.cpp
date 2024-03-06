@@ -1,9 +1,13 @@
 #include "MainWindow.h"
 
+//EVENT TABLE
+wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
+EVT_SIZE(MainWindow::WindowResize)
+wxEND_EVENT_TABLE()
+
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
 {
 	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard);
-	Bind(wxEVT_SIZE, &MainWindow::WindowResize, this);
 	gridInitialize();
 }
 
