@@ -7,8 +7,11 @@ wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
 {
+	statusBar = CreateStatusBar();
+	statusBarUpdate();
 	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard);
 	gridInitialize();
+	Layout();
 }
 
 void MainWindow::WindowResize(wxSizeEvent& event)
@@ -28,4 +31,11 @@ void MainWindow::gridInitialize()
 		gameBoard[i].resize(gridSize);
 	}
 	drawingPanel->setGridSize(gridSize);
+}
+
+void MainWindow::statusBarUpdate()
+{
+	wxString statusText = wxString::Format("Living Cells: %d, Generations: %d",
+		livingCells, generations);
+	statusBar->SetStatusText(statusText);
 }

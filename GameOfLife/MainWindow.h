@@ -16,4 +16,8 @@ public:
 private:
 	DrawingPanel* drawingPanel = nullptr; //DrawingPanel* - used to create a DrawingPanel that's a child of the MainWindow
 	std::vector<std::vector<bool>> gameBoard; //gameBoard vector full of vectors, filled with bools (all bools default to false)
+	int livingCells = 0; //living cells int
+	int generations = 0; //generations int
+	wxStatusBar* statusBar = nullptr; //status bar - initalized in the constructor
+	void statusBarUpdate(); //status bar update logic method
 };
