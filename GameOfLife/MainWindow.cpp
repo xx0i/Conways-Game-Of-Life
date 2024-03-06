@@ -2,7 +2,7 @@
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
 {
-	drawingPanel = new DrawingPanel(this, wxSize(100, 100));
+	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard);
 	Bind(wxEVT_SIZE, &MainWindow::WindowResize, this);
 	gridInitialize();
 }
