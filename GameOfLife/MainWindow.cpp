@@ -73,6 +73,15 @@ void MainWindow::nextEvent(wxCommandEvent&)
 
 void MainWindow::clearEvent(wxCommandEvent&)
 {
+	for (int i = 0; i < gameBoard.size(); i++) {
+		for (int j = 0; j < gameBoard.size(); j++) {
+			gameBoard[i][j] = false;
+		}
+	}
+	livingCells = 0;
+	generation = 0;
+	statusBarUpdate();
+	drawingPanel->Refresh();
 }
 
 int MainWindow::neighborCount(int row, int col)
