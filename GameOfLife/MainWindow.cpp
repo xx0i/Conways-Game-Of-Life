@@ -54,7 +54,7 @@ void MainWindow::gridInitialize()
 void MainWindow::statusBarUpdate()
 {
 	wxString statusText = wxString::Format("Living Cells: %d, Generations: %d",
-		livingCells, generations);
+		livingCells, generation);
 	statusBar->SetStatusText(statusText);
 }
 
@@ -68,6 +68,7 @@ void MainWindow::pauseEvent(wxCommandEvent&)
 
 void MainWindow::nextEvent(wxCommandEvent&)
 {
+	nextGeneration();
 }
 
 void MainWindow::clearEvent(wxCommandEvent&)
@@ -92,4 +93,45 @@ int MainWindow::neighborCount(int row, int col)
 		}
 	}
 	return livingNeighbors;
+}
+
+void MainWindow::nextGeneration()
+{
+	//initialize sandbox
+	std::vector<std::vector<bool>>sandbox;
+	sandbox.resize(gameBoard.size());
+	for (int s = 0; s < gameBoard.size(); s++) {
+		sandbox[s].resize(gameBoard.size());
+	}
+	//game of life rules (checks gameboard - applies to sandbox)
+	for (int i = 0; i < gameBoard.size(); i++) {
+		for (int j = 0; j < gameBoard.size(); j++) {
+			int neighbors = neighborCount(i, j);
+
+			if (gameBoard[i][j] && neighbors < 2) {
+				sandbox[i][j] = false;
+			}
+			else if (gameBoard[i][j] && neighbors > 3) {
+				sandbox[i][j] = false;
+			}
+			else if (gameBoard[i][j] && (neighbors == 2 || neighbors == 3)) {
+				sandbox[i][j] = true;
+			}
+			else if (!gameBoard[i][j] && neighbors == 3) {
+				sandbox[i][j] = true;
+			}
+		}
+	}
+	//sandbox living cells check (separated into separate loop for ease)
+	for (int i = 0; i < gameBoard.size(); i++) {
+		for (int j = 0; j < gameBoard.size(); j++) {
+			if (sandbox[i][j]) {
+				livingCells++;
+			}
+		}
+	}
+	gameBoard.swap(sandbox);
+	generation++;
+	statusBarUpdate();
+	drawingPanel->Refresh();
 }

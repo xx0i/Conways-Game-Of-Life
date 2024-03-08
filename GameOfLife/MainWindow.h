@@ -17,7 +17,7 @@ private:
 	DrawingPanel* drawingPanel = nullptr; //DrawingPanel* - used to create a DrawingPanel that's a child of the MainWindow
 	std::vector<std::vector<bool>> gameBoard; //gameBoard vector full of vectors, filled with bools (all bools default to false)
 	int livingCells = 0; //living cells int
-	int generations = 0; //generations int
+	int generation = 0; //generations int
 	wxStatusBar* statusBar = nullptr; //status bar - initalized in the constructor
 	void statusBarUpdate(); //status bar update logic method
 	wxToolBar* toolBar = nullptr; //tool bar - initalized in the constructor
@@ -26,4 +26,5 @@ private:
 	void nextEvent(wxCommandEvent&); //command event - called when the next icon is clicked
 	void clearEvent(wxCommandEvent&); //command event - called when the trash icon is clicked
 	int neighborCount(int row, int col); //calculating the neighbor count method
+	void nextGeneration();
 };
