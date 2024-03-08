@@ -11,12 +11,15 @@ EVT_MENU(12789, MainWindow::playEvent)
 EVT_MENU(15731, MainWindow::pauseEvent)
 EVT_MENU(18324, MainWindow::nextEvent)
 EVT_MENU(16430, MainWindow::clearEvent)
+EVT_TIMER(13124, MainWindow::timerEvent)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
 {
+	//status bar
 	statusBar = CreateStatusBar();
 	statusBarUpdate();
+	//tool bar
 	toolBar = CreateToolBar();
 	wxBitmap playIcon(play_xpm);
 	toolBar->AddTool(12789, "Play", playIcon);
@@ -27,6 +30,9 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	wxBitmap trashIcon(trash_xpm);
 	toolBar->AddTool(16430, "Clear", trashIcon);
 	toolBar->Realize();
+	//timer
+	timer = new wxTimer(this, 13124);
+	//drawing panel and grid initialization
 	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard);
 	gridInitialize();
 	Layout();
@@ -60,10 +66,13 @@ void MainWindow::statusBarUpdate()
 
 void MainWindow::playEvent(wxCommandEvent&)
 {
+	timer->Start(milisec4timer);
 }
 
 void MainWindow::pauseEvent(wxCommandEvent&)
 {
+	timer->Stop();
+
 }
 
 void MainWindow::nextEvent(wxCommandEvent&)
@@ -82,6 +91,7 @@ void MainWindow::clearEvent(wxCommandEvent&)
 	generation = 0;
 	statusBarUpdate();
 	drawingPanel->Refresh();
+	timer->Stop();
 }
 
 int MainWindow::neighborCount(int row, int col)
@@ -143,4 +153,9 @@ void MainWindow::nextGeneration()
 	generation++;
 	statusBarUpdate();
 	drawingPanel->Refresh();
+}
+
+void MainWindow::timerEvent(wxTimerEvent&)
+{
+	nextGeneration();
 }

@@ -8,7 +8,7 @@ class MainWindow : public wxFrame
 
 public:
 	MainWindow(); //constructor
-	~MainWindow() {} //destructor
+	~MainWindow() { delete timer; } //destructor
 	void WindowResize(wxSizeEvent&); //resize event
 	int gridSize = 15; //grid size variable
 	void gridInitialize(); //grid initialize method
@@ -26,5 +26,8 @@ private:
 	void nextEvent(wxCommandEvent&); //command event - called when the next icon is clicked
 	void clearEvent(wxCommandEvent&); //command event - called when the trash icon is clicked
 	int neighborCount(int row, int col); //calculating the neighbor count method
-	void nextGeneration();
+	void nextGeneration(); //next generation method
+	wxTimer* timer = nullptr; //timer pointer for the timer method
+	void timerEvent(wxTimerEvent&); //timer event handler - called when timer fires
+	int milisec4timer = 50;
 };
