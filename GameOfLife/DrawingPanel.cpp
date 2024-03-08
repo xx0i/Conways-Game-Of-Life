@@ -81,6 +81,5 @@ void DrawingPanel::mouseEvent(wxMouseEvent& event)
 	else {
 		gameBoardRef[row][column] = true;
 	}
-
 	Refresh();
 }
