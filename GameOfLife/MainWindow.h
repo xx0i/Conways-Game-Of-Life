@@ -25,4 +25,5 @@ private:
 	void pauseEvent(wxCommandEvent&); //command event - called when the pause icon is clicked
 	void nextEvent(wxCommandEvent&); //command event - called when the next icon is clicked
 	void clearEvent(wxCommandEvent&); //command event - called when the trash icon is clicked
+	int neighborCount(int row, int col); //calculating the neighbor count method
 };

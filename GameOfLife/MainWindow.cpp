@@ -73,3 +73,23 @@ void MainWindow::nextEvent(wxCommandEvent&)
 void MainWindow::clearEvent(wxCommandEvent&)
 {
 }
+
+int MainWindow::neighborCount(int row, int col)
+{
+	//variable to return the livingNeighbors
+	int livingNeighbors = 0;
+
+	for (int i = (row - 1); i <= (row + 1); i++) {
+		for (int j = (col - 1); j <= (col + 1); j++) {
+
+
+			if (i < 0 || i >= gridSize || j < 0 || j >= gridSize || (i == row && j == col) || (!gameBoard[i][j])) {
+				continue;
+			}
+			else if (gameBoard[i][j]) {
+				livingNeighbors++;
+			}
+		}
+	}
+	return livingNeighbors;
+}
