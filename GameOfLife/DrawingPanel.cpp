@@ -8,7 +8,7 @@ EVT_PAINT(DrawingPanel::OnPaint)
 EVT_LEFT_UP(DrawingPanel::mouseEvent)
 wxEND_EVENT_TABLE()
 
-DrawingPanel::DrawingPanel(wxWindow* parent, wxSize size, std::vector<std::vector<bool>>& board, int& livingCells, int& generation, wxStatusBar*& statsBar) : wxPanel(parent, wxID_ANY, wxPoint(0, 0)), gameBoardRef(board), livingCellRef(livingCells), generationsRef(generation), statusBarRef(statsBar)
+DrawingPanel::DrawingPanel(wxWindow* parent, wxSize size, std::vector<std::vector<bool>>& board, wxStatusBar*& statsBar, Settings* setting) : wxPanel(parent, wxID_ANY, wxPoint(0, 0)), gameBoardRef(board), statusBarRef(statsBar), settings(setting)
 {
 	this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
@@ -27,37 +27,30 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 		return;
 	}
 	graphicsContext->SetPen(*wxBLACK);
-	graphicsContext->SetBrush(*wxWHITE);
-	graphicsContext->DrawRectangle(0.0, 0.0, 200.0, 200.0);
 
 	//creating the grid
 	wxSize panelSize = this->GetClientSize();
-	float cellWidth = panelSize.GetWidth() / (float)gridSize;
-	float cellHeight = panelSize.GetHeight() / (float)gridSize;
+	float cellWidth = panelSize.GetWidth() / (float)settings->gridSize;
+	float cellHeight = panelSize.GetHeight() / (float)settings->gridSize;
 
-	for (int i = 0; i < gridSize; i++) {
-		for (int j = 0; j < gridSize; j++) {
+	for (int i = 0; i < settings->gridSize; i++) {
+		for (int j = 0; j < settings->gridSize; j++) {
 			//calculating cell location
 			int x = i * cellWidth;
 			int y = j * cellHeight;
 
 			//rectangle coulour based on true or false
 			if (gameBoardRef[i][j]) {
-				graphicsContext->SetBrush(*wxLIGHT_GREY);
+				graphicsContext->SetBrush(settings->GetLivingColour());
 			}
 			else {
-				graphicsContext->SetBrush(*wxWHITE);
+				graphicsContext->SetBrush(settings->GetDeadColour());
 			}
 
 			graphicsContext->DrawRectangle(x, y, cellWidth, cellHeight);
 		}
 	}
 	delete graphicsContext;
-}
-
-void DrawingPanel::setGridSize(int newSize)
-{
-	gridSize = newSize;
 }
 
 void DrawingPanel::mouseEvent(wxMouseEvent& event)
@@ -68,8 +61,8 @@ void DrawingPanel::mouseEvent(wxMouseEvent& event)
 
 	//cell width and cell height
 	wxSize panelSize = this->GetClientSize();
-	float cellWidth = panelSize.GetWidth() / (float)gridSize;
-	float cellHeight = panelSize.GetHeight() / (float)gridSize;
+	float cellWidth = panelSize.GetWidth() / (float)settings->gridSize;
+	float cellHeight = panelSize.GetHeight() / (float)settings->gridSize;
 
 	//row and column
 	float row = xCoord / cellWidth;
@@ -77,22 +70,21 @@ void DrawingPanel::mouseEvent(wxMouseEvent& event)
 
 	if (gameBoardRef[row][column]) {
 		gameBoardRef[row][column] = false;
-		livingCellRef--;
+		settings->livingCells--;
 		statusBarUpdate();
 	}
 	else {
 		gameBoardRef[row][column] = true;
-		livingCellRef++;
+		settings->livingCells++;
 		statusBarUpdate();
 	}
 	Refresh();
 }
 
-//same as MainWindow Status Bar Update + uses the references to update the correct variable
-//(so that the living cell count will update as the user explicitly turns cells on or off)
+//same as MainWindow Status Bar Update - so that the living cell count will update as the user explicitly turns cells on or off
 void DrawingPanel::statusBarUpdate()
 {
 	wxString statusText = wxString::Format("Living Cells: %d, Generations: %d",
-		livingCellRef, generationsRef);
+		settings->livingCells, settings->generation);
 	statusBarRef->SetStatusText(statusText);
 }

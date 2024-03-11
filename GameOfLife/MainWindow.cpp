@@ -33,7 +33,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	//timer
 	timer = new wxTimer(this, 13124);
 	//drawing panel and grid initialization
-	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, livingCells, generation, statusBar);
+	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, statusBar, &settings);
 	gridInitialize();
 	Layout();
 }
@@ -50,23 +50,22 @@ void MainWindow::WindowResize(wxSizeEvent& event)
 
 void MainWindow::gridInitialize()
 {
-	gameBoard.resize(gridSize);
-	for (int i = 0; i < gridSize; i++) {
-		gameBoard[i].resize(gridSize);
+	gameBoard.resize(settings.gridSize);
+	for (int i = 0; i < settings.gridSize; i++) {
+		gameBoard[i].resize(settings.gridSize);
 	}
-	drawingPanel->setGridSize(gridSize);
 }
 
 void MainWindow::statusBarUpdate()
 {
 	wxString statusText = wxString::Format("Living Cells: %d, Generations: %d",
-		livingCells, generation);
+		settings.livingCells, settings.generation);
 	statusBar->SetStatusText(statusText);
 }
 
 void MainWindow::playEvent(wxCommandEvent&)
 {
-	timer->Start(milisec4timer);
+	timer->Start(settings.milisec4timer);
 }
 
 void MainWindow::pauseEvent(wxCommandEvent&)
@@ -87,8 +86,8 @@ void MainWindow::clearEvent(wxCommandEvent&)
 			gameBoard[i][j] = false;
 		}
 	}
-	livingCells = 0;
-	generation = 0;
+	settings.livingCells = 0;
+	settings.generation = 0;
 	statusBarUpdate();
 	drawingPanel->Refresh();
 	timer->Stop();
@@ -103,7 +102,7 @@ int MainWindow::neighborCount(int row, int col)
 		for (int j = (col - 1); j <= (col + 1); j++) {
 
 
-			if (i < 0 || i >= gridSize || j < 0 || j >= gridSize || (i == row && j == col) || (!gameBoard[i][j])) {
+			if (i < 0 || i >= settings.gridSize || j < 0 || j >= settings.gridSize || (i == row && j == col) || (!gameBoard[i][j])) {
 				continue;
 			}
 			else if (gameBoard[i][j]) {
@@ -145,12 +144,12 @@ void MainWindow::nextGeneration()
 	for (int i = 0; i < gameBoard.size(); i++) {
 		for (int j = 0; j < gameBoard.size(); j++) {
 			if (sandbox[i][j]) {
-				livingCells++;
+				settings.livingCells++;
 			}
 		}
 	}
 	gameBoard.swap(sandbox);
-	generation++;
+	settings.generation++;
 	statusBarUpdate();
 	drawingPanel->Refresh();
 }

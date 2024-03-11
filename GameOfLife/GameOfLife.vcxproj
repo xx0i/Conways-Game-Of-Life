@@ -134,11 +134,14 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="DrawingPanel.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="SettingsDialogUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="DrawingPanel.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="SettingsDialogUI.h" />
+    <ClInclude Include="SettingsStruct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
