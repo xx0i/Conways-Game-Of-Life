@@ -33,7 +33,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	//timer
 	timer = new wxTimer(this, 13124);
 	//drawing panel and grid initialization
-	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard);
+	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, livingCells, generation, statusBar);
 	gridInitialize();
 	Layout();
 }

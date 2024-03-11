@@ -8,7 +8,7 @@ EVT_PAINT(DrawingPanel::OnPaint)
 EVT_LEFT_UP(DrawingPanel::mouseEvent)
 wxEND_EVENT_TABLE()
 
-DrawingPanel::DrawingPanel(wxWindow* parent, wxSize size, std::vector<std::vector<bool>>& board) : wxPanel(parent, wxID_ANY, wxPoint(0, 0)), gameBoardRef(board)
+DrawingPanel::DrawingPanel(wxWindow* parent, wxSize size, std::vector<std::vector<bool>>& board, int& livingCells, int& generation, wxStatusBar*& statsBar) : wxPanel(parent, wxID_ANY, wxPoint(0, 0)), gameBoardRef(board), livingCellRef(livingCells), generationsRef(generation), statusBarRef(statsBar)
 {
 	this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
@@ -77,9 +77,22 @@ void DrawingPanel::mouseEvent(wxMouseEvent& event)
 
 	if (gameBoardRef[row][column]) {
 		gameBoardRef[row][column] = false;
+		livingCellRef--;
+		statusBarUpdate();
 	}
 	else {
 		gameBoardRef[row][column] = true;
+		livingCellRef++;
+		statusBarUpdate();
 	}
 	Refresh();
+}
+
+//same as MainWindow Status Bar Update + uses the references to update the correct variable
+//(so that the living cell count will update as the user explicitly turns cells on or off)
+void DrawingPanel::statusBarUpdate()
+{
+	wxString statusText = wxString::Format("Living Cells: %d, Generations: %d",
+		livingCellRef, generationsRef);
+	statusBarRef->SetStatusText(statusText);
 }
