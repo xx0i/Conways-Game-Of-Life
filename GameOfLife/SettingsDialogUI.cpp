@@ -50,10 +50,12 @@ void SettingsDialogUI::okButtonEvent(wxCommandEvent&)
 	settings->milisec4timer = intervalTimeSpinCtrl->GetValue();
 	settings->SetLivingColour(liveColourPickerCtrl->GetColour());
 	settings->setDeadColour(deadColourPickerCtrl->GetColour());
+	settings->saveData();
 	EndModal(wxID_OK);
 }
 
 void SettingsDialogUI::cancelButtonEvent(wxCommandEvent&)
 {
+	settings->loadData();
 	EndModal(wxID_CANCEL);
 }

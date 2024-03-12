@@ -1,5 +1,6 @@
 #pragma once
 #include "wx/wx.h"
+#include "fstream"
 
 struct Settings
 {
@@ -22,7 +23,7 @@ struct Settings
 
 	//accessor methods to get wxColour based on the RGB and Alpha values
 	wxColor GetLivingColour()const {
-		return wxColor(livingRed,livingGreen, livingBlue, livingAlpha);
+		return wxColor(livingRed, livingGreen, livingBlue, livingAlpha);
 	}
 	wxColor GetDeadColour()const {
 		return wxColor(deadRed, deadGreen, deadBlue, deadAlpha);
@@ -40,5 +41,22 @@ struct Settings
 		deadGreen = color.GetGreen();
 		deadBlue = color.GetBlue();
 		deadAlpha = color.GetAlpha();
+	}
+
+	//Load Data
+	void loadData()const {
+		std::ifstream file("settings.bin", std::ios::binary | std::ios::in);
+		if (file) {
+			file.read((char*)this, sizeof(Settings));
+			file.close();
+		}
+	}
+	//Save Data
+	void saveData()const {
+		std::ofstream file("settings.bin", std::ios::out | std::ios::binary);
+		if (file) {
+			file.write((char*)this, sizeof(Settings));
+			file.close();
+		}
 	}
 };
