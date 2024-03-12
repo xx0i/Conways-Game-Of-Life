@@ -3,6 +3,7 @@
 #include "pause.xpm"
 #include "next.xpm"
 #include "trash.xpm"
+#include "SettingsDialogUI.h"
 
 //EVENT TABLE
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -12,6 +13,7 @@ EVT_MENU(15731, MainWindow::pauseEvent)
 EVT_MENU(18324, MainWindow::nextEvent)
 EVT_MENU(16430, MainWindow::clearEvent)
 EVT_TIMER(13124, MainWindow::timerEvent)
+EVT_MENU(10002, MainWindow::settingsMenu)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
@@ -32,6 +34,12 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	toolBar->Realize();
 	//timer
 	timer = new wxTimer(this, 13124);
+	//menu bar
+	menuBar = new wxMenuBar();
+	SetMenuBar(menuBar);
+	optionsMenu = new wxMenu();
+	optionsMenu->Append(10002,"Settings");
+	menuBar->Append(optionsMenu, "Options");
 	//drawing panel and grid initialization
 	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, statusBar, &settings);
 	gridInitialize();
@@ -157,4 +165,13 @@ void MainWindow::nextGeneration()
 void MainWindow::timerEvent(wxTimerEvent&)
 {
 	nextGeneration();
+}
+
+void MainWindow::settingsMenu(wxCommandEvent&)
+{
+	SettingsDialogUI settingDialouge(this, wxID_ANY, "Settings", &settings);
+	if (settingDialouge.ShowModal() == wxID_OK) {
+		gridInitialize();
+		drawingPanel->Refresh();
+	}
 }

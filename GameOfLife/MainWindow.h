@@ -28,4 +28,7 @@ private:
 	wxTimer* timer = nullptr; //timer pointer for the timer method
 	void timerEvent(wxTimerEvent&); //timer event handler - called when timer fires
 	Settings settings; //settings struct variable
+	wxMenuBar* menuBar = nullptr; //menu bar (only one)
+	wxMenu* optionsMenu = nullptr; //options menu (one of many)
+	void settingsMenu(wxCommandEvent&); //command event - called when the settings menu is selected
 };
