@@ -18,8 +18,6 @@ struct Settings
 
 	int gridSize = 15; //grid size variable - default 15
 	int milisec4timer = 50; //interval for time variable - default 50
-	int livingCells = 0; //living cells int
-	int generation = 0; //generations int
 
 	//accessor methods to get wxColour based on the RGB and Alpha values
 	wxColor GetLivingColour()const {

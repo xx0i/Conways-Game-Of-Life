@@ -6,7 +6,7 @@ EVT_BUTTON(wxID_OK, SettingsDialogUI::okButtonEvent)
 EVT_BUTTON(wxID_CANCEL, SettingsDialogUI::cancelButtonEvent)
 wxEND_EVENT_TABLE()
 
-SettingsDialogUI::SettingsDialogUI(wxWindow* parent, wxWindowID id, const wxString& title, Settings* setting) : wxDialog(parent, wxID_ANY, "Settings",wxDefaultPosition,wxSize(235,250)), settings(setting)
+SettingsDialogUI::SettingsDialogUI(wxWindow* parent, wxWindowID id, const wxString& title, Settings* setting) : wxDialog(parent, wxID_ANY, "Settings",wxDefaultPosition,wxSize(235,260)), settings(setting)
 {
 	wxBoxSizer* mainBox = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainBox);
@@ -37,11 +37,11 @@ SettingsDialogUI::SettingsDialogUI(wxWindow* parent, wxWindowID id, const wxStri
 	//ok and cancel buttons
 	wxSizer* okCancel = CreateButtonSizer(wxOK | wxCANCEL);
 	// Create a horizontal sizer
-	wxBoxSizer* horizontalSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer* okCancelSizer = new wxBoxSizer(wxHORIZONTAL);
 	// Add the buttons to the sizer
-	horizontalSizer->Add(okCancel, 0, wxALIGN_CENTER | wxALL, 10);
-	// Set the sizer for your dialog or frame
-	SetSizer(horizontalSizer);
+	okCancelSizer->Add(okCancel, 0, wxALIGN_CENTER | wxALL, 10);
+	mainBox->Add(0, 10, 1, wxEXPAND);
+	mainBox->Add(okCancelSizer);
 }
 
 void SettingsDialogUI::okButtonEvent(wxCommandEvent&)

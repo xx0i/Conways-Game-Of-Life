@@ -42,7 +42,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	optionsMenu->Append(10002,"Settings");
 	menuBar->Append(optionsMenu, "Options");
 	//drawing panel and grid initialization
-	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, statusBar, &settings);
+	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, statusBar, &settings, livingCells, generation);
 	gridInitialize();
 	Layout();
 }
@@ -68,7 +68,7 @@ void MainWindow::gridInitialize()
 void MainWindow::statusBarUpdate()
 {
 	wxString statusText = wxString::Format("Living Cells: %d, Generations: %d",
-		settings.livingCells, settings.generation);
+		livingCells, generation);
 	statusBar->SetStatusText(statusText);
 }
 
@@ -95,8 +95,8 @@ void MainWindow::clearEvent(wxCommandEvent&)
 			gameBoard[i][j] = false;
 		}
 	}
-	settings.livingCells = 0;
-	settings.generation = 0;
+	livingCells = 0;
+	generation = 0;
 	statusBarUpdate();
 	drawingPanel->Refresh();
 	timer->Stop();
@@ -153,12 +153,12 @@ void MainWindow::nextGeneration()
 	for (int i = 0; i < gameBoard.size(); i++) {
 		for (int j = 0; j < gameBoard.size(); j++) {
 			if (sandbox[i][j]) {
-				settings.livingCells++;
+				livingCells++;
 			}
 		}
 	}
 	gameBoard.swap(sandbox);
-	settings.generation++;
+	generation++;
 	statusBarUpdate();
 	drawingPanel->Refresh();
 }

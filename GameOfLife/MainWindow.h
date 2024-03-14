@@ -31,4 +31,6 @@ private:
 	wxMenuBar* menuBar = nullptr; //menu bar (only one)
 	wxMenu* optionsMenu = nullptr; //options menu (one of many)
 	void settingsMenu(wxCommandEvent&); //command event - called when the settings menu is selected
+	int livingCells = 0; //living cells int
+	int generation = 0; //generations int
 };
