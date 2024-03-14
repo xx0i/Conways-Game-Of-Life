@@ -8,7 +8,7 @@ EVT_PAINT(DrawingPanel::OnPaint)
 EVT_LEFT_UP(DrawingPanel::mouseEvent)
 wxEND_EVENT_TABLE()
 
-DrawingPanel::DrawingPanel(wxWindow* parent, wxSize size, std::vector<std::vector<bool>>& board, wxStatusBar*& statsBar, Settings* setting, int& livingCells, int& generation) : wxPanel(parent, wxID_ANY, wxPoint(0, 0)), gameBoardRef(board), statusBarRef(statsBar), settings(setting), livingCellsRef(livingCells), generationRef(generation)
+DrawingPanel::DrawingPanel(wxWindow* parent, wxSize size, std::vector<std::vector<bool>>& board, wxStatusBar*& statsBar, Settings* setting, int& livingCells, int& generation, std::vector<std::vector<int>>& neighbours) : wxPanel(parent, wxID_ANY, wxPoint(0, 0)), gameBoardRef(board), statusBarRef(statsBar), settings(setting), livingCellsRef(livingCells), generationRef(generation), neighboursRef(neighbours)
 {
 	this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
@@ -33,6 +33,8 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 	float cellWidth = panelSize.GetWidth() / (float)settings->gridSize;
 	float cellHeight = panelSize.GetHeight() / (float)settings->gridSize;
 
+	graphicsContext->SetFont(wxFontInfo(8), *wxRED); //text font
+
 	for (int i = 0; i < settings->gridSize; i++) {
 		for (int j = 0; j < settings->gridSize; j++) {
 			//calculating cell location
@@ -48,6 +50,15 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 			}
 
 			graphicsContext->DrawRectangle(x, y, cellWidth, cellHeight);
+
+			//show neighbour count drawing text
+			if (neighboursRef[i][j] > 0) {
+				wxString cellText = std::to_string(neighboursRef[i][j]);
+				double textWidth;
+				double textHeight;
+				graphicsContext->GetTextExtent(cellText, &textWidth, &textHeight);
+				graphicsContext->DrawText(cellText, (i * cellWidth) + cellWidth / 2 - textWidth / 2, (j * cellHeight) + cellHeight / 2 - textHeight / 2);
+			}
 		}
 	}
 	delete graphicsContext;

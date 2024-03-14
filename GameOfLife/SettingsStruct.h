@@ -57,4 +57,7 @@ struct Settings
 			file.close();
 		}
 	}
+
+	//show neighbour count
+	bool isShowNeighbourCount = true;
 };

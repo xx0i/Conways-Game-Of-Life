@@ -23,7 +23,7 @@ private:
 	void pauseEvent(wxCommandEvent&); //command event - called when the pause icon is clicked
 	void nextEvent(wxCommandEvent&); //command event - called when the next icon is clicked
 	void clearEvent(wxCommandEvent&); //command event - called when the trash icon is clicked
-	int neighborCount(int row, int col); //calculating the neighbor count method
+	int neighbourCount(int row, int col); //calculating the neighbor count method
 	void nextGeneration(); //next generation method
 	wxTimer* timer = nullptr; //timer pointer for the timer method
 	void timerEvent(wxTimerEvent&); //timer event handler - called when timer fires
@@ -33,4 +33,8 @@ private:
 	void settingsMenu(wxCommandEvent&); //command event - called when the settings menu is selected
 	int livingCells = 0; //living cells int
 	int generation = 0; //generations int
+	wxMenu* viewMenu = nullptr; //view menu (one of many)
+	wxMenuItem* showNeighbourCount = nullptr; //one of the checkable options in the view menu
+	void showNeighbourCountEvent(wxCommandEvent&); //show neighbour count event
+	std::vector<std::vector<int>> neighbours; //neighbours vector full of vectors of ints
 };

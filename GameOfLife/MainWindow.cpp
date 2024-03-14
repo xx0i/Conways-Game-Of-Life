@@ -14,6 +14,7 @@ EVT_MENU(18324, MainWindow::nextEvent)
 EVT_MENU(16430, MainWindow::clearEvent)
 EVT_TIMER(13124, MainWindow::timerEvent)
 EVT_MENU(10002, MainWindow::settingsMenu)
+EVT_MENU(17902, MainWindow::showNeighbourCountEvent)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
@@ -38,11 +39,18 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	//menu bar
 	menuBar = new wxMenuBar();
 	SetMenuBar(menuBar);
+	//view menu
+	viewMenu = new wxMenu();
+	showNeighbourCount = new wxMenuItem(viewMenu, 17902, "Show Neighbour Count", wxEmptyString, wxITEM_CHECK);
+	showNeighbourCount->SetCheckable(true);
+	viewMenu->Append(showNeighbourCount);
+	menuBar->Append(viewMenu, "View");
+	//options menu
 	optionsMenu = new wxMenu();
 	optionsMenu->Append(10002,"Settings");
 	menuBar->Append(optionsMenu, "Options");
 	//drawing panel and grid initialization
-	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, statusBar, &settings, livingCells, generation);
+	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, statusBar, &settings, livingCells, generation, neighbours);
 	gridInitialize();
 	Layout();
 }
@@ -60,8 +68,10 @@ void MainWindow::WindowResize(wxSizeEvent& event)
 void MainWindow::gridInitialize()
 {
 	gameBoard.resize(settings.gridSize);
+	neighbours.resize(settings.gridSize);
 	for (int i = 0; i < settings.gridSize; i++) {
 		gameBoard[i].resize(settings.gridSize);
+		neighbours[i].resize(settings.gridSize);
 	}
 }
 
@@ -72,27 +82,31 @@ void MainWindow::statusBarUpdate()
 	statusBar->SetStatusText(statusText);
 }
 
-void MainWindow::playEvent(wxCommandEvent&)
+void MainWindow::playEvent(wxCommandEvent& event)
 {
 	timer->Start(settings.milisec4timer);
+	event.Skip();
 }
 
-void MainWindow::pauseEvent(wxCommandEvent&)
+void MainWindow::pauseEvent(wxCommandEvent& event)
 {
 	timer->Stop();
+	event.Skip();
 
 }
 
-void MainWindow::nextEvent(wxCommandEvent&)
+void MainWindow::nextEvent(wxCommandEvent& event)
 {
 	nextGeneration();
+	event.Skip();
 }
 
-void MainWindow::clearEvent(wxCommandEvent&)
+void MainWindow::clearEvent(wxCommandEvent& event)
 {
 	for (int i = 0; i < gameBoard.size(); i++) {
 		for (int j = 0; j < gameBoard.size(); j++) {
 			gameBoard[i][j] = false;
+			neighbours[i][j] = 0;
 		}
 	}
 	livingCells = 0;
@@ -100,9 +114,10 @@ void MainWindow::clearEvent(wxCommandEvent&)
 	statusBarUpdate();
 	drawingPanel->Refresh();
 	timer->Stop();
+	event.Skip();
 }
 
-int MainWindow::neighborCount(int row, int col)
+int MainWindow::neighbourCount(int row, int col)
 {
 	//variable to return the livingNeighbors
 	int livingNeighbors = 0;
@@ -133,18 +148,18 @@ void MainWindow::nextGeneration()
 	//game of life rules (checks gameboard - applies to sandbox)
 	for (int i = 0; i < gameBoard.size(); i++) {
 		for (int j = 0; j < gameBoard.size(); j++) {
-			int neighbors = neighborCount(i, j);
+			int count = neighbourCount(i, j);
 
-			if (gameBoard[i][j] && neighbors < 2) {
+			if (gameBoard[i][j] && count < 2) {
 				sandbox[i][j] = false;
 			}
-			else if (gameBoard[i][j] && neighbors > 3) {
+			else if (gameBoard[i][j] && count > 3) {
 				sandbox[i][j] = false;
 			}
-			else if (gameBoard[i][j] && (neighbors == 2 || neighbors == 3)) {
+			else if (gameBoard[i][j] && (count == 2 || count == 3)) {
 				sandbox[i][j] = true;
 			}
-			else if (!gameBoard[i][j] && neighbors == 3) {
+			else if (!gameBoard[i][j] && count == 3) {
 				sandbox[i][j] = true;
 			}
 		}
@@ -158,21 +173,38 @@ void MainWindow::nextGeneration()
 		}
 	}
 	gameBoard.swap(sandbox);
+
+	for (int i = 0; i < gameBoard.size(); i++) {
+		for (int j = 0; j < gameBoard.size(); j++) {
+			int count = neighbourCount(i, j);
+			neighbours[i][j] = count;
+		}
+	}
+
 	generation++;
 	statusBarUpdate();
 	drawingPanel->Refresh();
 }
 
-void MainWindow::timerEvent(wxTimerEvent&)
+void MainWindow::timerEvent(wxTimerEvent& event)
 {
 	nextGeneration();
+	event.Skip();
 }
 
-void MainWindow::settingsMenu(wxCommandEvent&)
+void MainWindow::settingsMenu(wxCommandEvent& event)
 {
 	SettingsDialogUI settingDialouge(this, wxID_ANY, "Settings", &settings);
 	if (settingDialouge.ShowModal() == wxID_OK) {
 		gridInitialize();
 		drawingPanel->Refresh();
 	}
+	event.Skip();
+	settingDialouge.Destroy();
+}
+
+void MainWindow::showNeighbourCountEvent(wxCommandEvent& event)
+{
+	settings.isShowNeighbourCount = showNeighbourCount->IsChecked();
+	event.Skip();
 }
