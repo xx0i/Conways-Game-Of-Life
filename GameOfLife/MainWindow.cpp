@@ -47,7 +47,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	menuBar->Append(viewMenu, "View");
 	//options menu
 	optionsMenu = new wxMenu();
-	optionsMenu->Append(10002,"Settings");
+	optionsMenu->Append(10002, "Settings");
 	menuBar->Append(optionsMenu, "Options");
 	//drawing panel and grid initialization
 	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, statusBar, &settings, livingCells, generation, neighbours);

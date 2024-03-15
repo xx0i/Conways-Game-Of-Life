@@ -6,7 +6,7 @@ EVT_BUTTON(wxID_OK, SettingsDialogUI::okButtonEvent)
 EVT_BUTTON(wxID_CANCEL, SettingsDialogUI::cancelButtonEvent)
 wxEND_EVENT_TABLE()
 
-SettingsDialogUI::SettingsDialogUI(wxWindow* parent, wxWindowID id, const wxString& title, Settings* setting) : wxDialog(parent, wxID_ANY, "Settings",wxDefaultPosition,wxSize(235,260)), settings(setting)
+SettingsDialogUI::SettingsDialogUI(wxWindow* parent, wxWindowID id, const wxString& title, Settings* setting) : wxDialog(parent, wxID_ANY, "Settings", wxDefaultPosition, wxSize(235, 260)), settings(setting)
 {
 	wxBoxSizer* mainBox = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainBox);
@@ -21,7 +21,7 @@ SettingsDialogUI::SettingsDialogUI(wxWindow* parent, wxWindowID id, const wxStri
 	wxStaticText* intervalControl = new wxStaticText(this, wxID_ANY, "Timer Interval\nin miliseconds:");
 	intervalControl->Move(wxPoint(15, 55));
 	intervalTimeSpinCtrl = new wxSpinCtrl(this, 14210, std::to_string(settings->milisec4timer), wxPoint(130, 55), wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000, settings->milisec4timer, "wxSpinCtrlInterval");
-	
+
 	//paint control
 	wxBoxSizer* liveColourCtrl = new wxBoxSizer(wxHORIZONTAL);
 	wxStaticText* liveControl = new wxStaticText(this, wxID_ANY, "Live Cell Colour:");
@@ -32,7 +32,7 @@ SettingsDialogUI::SettingsDialogUI(wxWindow* parent, wxWindowID id, const wxStri
 	wxStaticText* deadControl = new wxStaticText(this, wxID_ANY, "Dead Cell Colour:");
 	deadControl->Move(wxPoint(10, 155));
 	deadColourPickerCtrl = new wxColourPickerCtrl(this, 15622, settings->GetDeadColour(), wxPoint(110, 155), wxDefaultSize, wxCLRP_DEFAULT_STYLE, wxDefaultValidator, wxColourPickerCtrlNameStr);
-	
+
 
 	//ok and cancel buttons
 	wxSizer* okCancel = CreateButtonSizer(wxOK | wxCANCEL);
