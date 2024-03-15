@@ -38,4 +38,7 @@ private:
 	void showNeighbourCountEvent(wxCommandEvent&); //show neighbour count event
 	std::vector<std::vector<int>> neighbours; //neighbours vector full of vectors of ints
 	void refreshMenuItems(); //refreshes menu items
+	wxMenu* randomizeMenu = nullptr; //randomize menu (one of many)
+	void randomTimeEvent(wxCommandEvent&); //randomize with time event
+	void randomSeedEvent(wxCommandEvent&); //randomize with seed event
 };

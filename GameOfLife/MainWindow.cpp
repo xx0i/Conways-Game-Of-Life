@@ -4,6 +4,7 @@
 #include "next.xpm"
 #include "trash.xpm"
 #include "SettingsDialogUI.h"
+#include "wx/numdlg.h"
 
 //EVENT TABLE
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -15,6 +16,8 @@ EVT_MENU(16430, MainWindow::clearEvent)
 EVT_TIMER(13124, MainWindow::timerEvent)
 EVT_MENU(10002, MainWindow::settingsMenu)
 EVT_MENU(17902, MainWindow::showNeighbourCountEvent)
+EVT_MENU(13082, MainWindow::randomTimeEvent)
+EVT_MENU(18120, MainWindow::randomSeedEvent)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
@@ -45,6 +48,11 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	showNeighbourCount->SetCheckable(true);
 	viewMenu->Append(showNeighbourCount);
 	menuBar->Append(viewMenu, "View");
+	//randomize menu
+	randomizeMenu = new wxMenu();
+	randomizeMenu->Append(13082, "Randomize (Time)");
+	randomizeMenu->Append(18120, "Randomize (Seed)");
+	menuBar->Append(randomizeMenu, "Randomize");
 	//options menu
 	optionsMenu = new wxMenu();
 	optionsMenu->Append(10002, "Settings");
@@ -215,4 +223,34 @@ void MainWindow::refreshMenuItems()
 {
 	showNeighbourCount->Check(settings.isShowNeighbourCount);
 	settings.saveData();
+}
+
+void MainWindow::randomTimeEvent(wxCommandEvent& event)
+{
+	srand(time(NULL));
+
+	for (int i = 0; i < gameBoard.size(); i++) {
+		for (int j = 0; j < gameBoard.size(); j++) {
+			int num = rand();
+			gameBoard[i][j] = (num % 3 == 0);
+		}
+	}
+	Refresh();
+	event.Skip();
+}
+
+void MainWindow::randomSeedEvent(wxCommandEvent& event)
+{
+	long seed = wxGetNumberFromUser("Seed", "Enter Seed:", "Randomize", (rand() % (1710527999 - 1710527000 + 1) + 1710527000), 0, LONG_MAX, this, wxDefaultPosition);
+	
+	srand(seed);
+
+	for (int i = 0; i < gameBoard.size(); i++) {
+		for (int j = 0; j < gameBoard.size(); j++) {
+			int num = rand();
+			gameBoard[i][j] = (num % 3 == 0);
+		}
+	}
+	Refresh();
+	event.Skip();
 }
