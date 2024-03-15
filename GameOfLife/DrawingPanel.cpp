@@ -52,12 +52,14 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 			graphicsContext->DrawRectangle(x, y, cellWidth, cellHeight);
 
 			//show neighbour count drawing text
-			if (neighboursRef[i][j] > 0) {
-				wxString cellText = std::to_string(neighboursRef[i][j]);
-				double textWidth;
-				double textHeight;
-				graphicsContext->GetTextExtent(cellText, &textWidth, &textHeight);
-				graphicsContext->DrawText(cellText, (i * cellWidth) + cellWidth / 2 - textWidth / 2, (j * cellHeight) + cellHeight / 2 - textHeight / 2);
+			if (settings->isShowNeighbourCount) {
+				if (neighboursRef[i][j] > 0) {
+					wxString cellText = std::to_string(neighboursRef[i][j]);
+					double textWidth;
+					double textHeight;
+					graphicsContext->GetTextExtent(cellText, &textWidth, &textHeight);
+					graphicsContext->DrawText(cellText, (i * cellWidth) + cellWidth / 2 - textWidth / 2, (j * cellHeight) + cellHeight / 2 - textHeight / 2);
+				}
 			}
 		}
 	}

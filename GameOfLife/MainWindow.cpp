@@ -53,6 +53,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, statusBar, &settings, livingCells, generation, neighbours);
 	gridInitialize();
 	Layout();
+	refreshMenuItems();
 }
 
 void MainWindow::WindowResize(wxSizeEvent& event)
@@ -206,5 +207,12 @@ void MainWindow::settingsMenu(wxCommandEvent& event)
 void MainWindow::showNeighbourCountEvent(wxCommandEvent& event)
 {
 	settings.isShowNeighbourCount = showNeighbourCount->IsChecked();
+	refreshMenuItems();
 	event.Skip();
+}
+
+void MainWindow::refreshMenuItems()
+{
+	showNeighbourCount->Check(settings.isShowNeighbourCount);
+	settings.saveData();
 }

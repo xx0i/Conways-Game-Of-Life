@@ -37,4 +37,5 @@ private:
 	wxMenuItem* showNeighbourCount = nullptr; //one of the checkable options in the view menu
 	void showNeighbourCountEvent(wxCommandEvent&); //show neighbour count event
 	std::vector<std::vector<int>> neighbours; //neighbours vector full of vectors of ints
+	void refreshMenuItems(); //refreshes menu items
 };
