@@ -58,4 +58,20 @@ struct Settings
 		}
 	}
 	bool isShowNeighbourCount = true; //show neighbour count
+
+	//reset to default
+	void resetToDefault() {
+		livingRed = 217;
+		livingGreen = 217;
+		livingBlue = 214;
+		livingAlpha = 255;
+
+		deadRed = 255;
+		deadGreen = 255;
+		deadBlue = 255;
+		deadAlpha = 255;
+
+		gridSize = 15;
+		milisec4timer = 50;
+	}
 };

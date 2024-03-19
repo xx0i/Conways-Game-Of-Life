@@ -5,6 +5,7 @@
 #include "trash.xpm"
 #include "SettingsDialogUI.h"
 #include "wx/numdlg.h"
+#include "wx/filedlg.h"
 
 //EVENT TABLE
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -18,6 +19,12 @@ EVT_MENU(10002, MainWindow::settingsMenu)
 EVT_MENU(17902, MainWindow::showNeighbourCountEvent)
 EVT_MENU(13082, MainWindow::randomTimeEvent)
 EVT_MENU(18120, MainWindow::randomSeedEvent)
+EVT_MENU(wxID_NEW, MainWindow::newEvent)
+EVT_MENU(wxID_OPEN, MainWindow::openEvent)
+EVT_MENU(wxID_SAVE, MainWindow::saveEvent)
+EVT_MENU(wxID_SAVEAS, MainWindow::saveAsEvent)
+EVT_MENU(19012, MainWindow::exitEvent)
+EVT_MENU(19882, MainWindow::resetSettingsEvent)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
@@ -42,6 +49,14 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	//menu bar
 	menuBar = new wxMenuBar();
 	SetMenuBar(menuBar);
+	//file menu
+	fileMenu = new wxMenu();
+	fileMenu->Append(wxID_NEW);
+	fileMenu->Append(wxID_OPEN);
+	fileMenu->Append(wxID_SAVE);
+	fileMenu->Append(wxID_SAVEAS);
+	fileMenu->Append(19012, "Exit");
+	menuBar->Append(fileMenu, "File");
 	//view menu
 	viewMenu = new wxMenu();
 	showNeighbourCount = new wxMenuItem(viewMenu, 17902, "Show Neighbour Count", wxEmptyString, wxITEM_CHECK);
@@ -56,6 +71,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	//options menu
 	optionsMenu = new wxMenu();
 	optionsMenu->Append(10002, "Settings");
+	optionsMenu->Append(19882, "Reset Settings to default");
 	menuBar->Append(optionsMenu, "Options");
 	//drawing panel and grid initialization
 	drawingPanel = new DrawingPanel(this, wxSize(100, 100), gameBoard, statusBar, &settings, livingCells, generation, neighbours);
@@ -227,12 +243,17 @@ void MainWindow::refreshMenuItems()
 
 void MainWindow::randomTimeEvent(wxCommandEvent& event)
 {
+	livingCells = 0;
+
 	srand(time(NULL));
 
 	for (int i = 0; i < gameBoard.size(); i++) {
 		for (int j = 0; j < gameBoard.size(); j++) {
 			int num = rand();
 			gameBoard[i][j] = (num % 3 == 0);
+			if (gameBoard[i][j]) {
+				livingCells++;
+			}
 		}
 	}
 	Refresh();
@@ -241,16 +262,123 @@ void MainWindow::randomTimeEvent(wxCommandEvent& event)
 
 void MainWindow::randomSeedEvent(wxCommandEvent& event)
 {
+	livingCells = 0;
+
 	long seed = wxGetNumberFromUser("Seed", "Enter Seed:", "Randomize", (rand() % (1710527999 - 1710527000 + 1) + 1710527000), 0, LONG_MAX, this, wxDefaultPosition);
-	
+
 	srand(seed);
 
 	for (int i = 0; i < gameBoard.size(); i++) {
 		for (int j = 0; j < gameBoard.size(); j++) {
 			int num = rand();
 			gameBoard[i][j] = (num % 3 == 0);
+			if (gameBoard[i][j]) {
+				livingCells++;
+			}
 		}
 	}
+	Refresh();
+	event.Skip();
+}
+
+void MainWindow::newEvent(wxCommandEvent& event)
+{
+	event.Skip();
+}
+
+void MainWindow::openEvent(wxCommandEvent& event)
+{
+	wxFileDialog fileDialouge(this, "Open File", wxEmptyString, wxEmptyString, "Game of Life (*.cells) | *.cells", wxFD_OPEN);
+
+	if (fileDialouge.ShowModal() == wxID_CANCEL) {
+		return;
+	}
+	for (int i = 0; i < gameBoard.size(); i++) {
+		gameBoard[i].clear();
+		gameBoard.resize(0);
+	}
+	gameBoard.clear();
+	gameBoard.resize(0);
+	livingCells = 0;
+
+	std::string buffer;
+	std::ifstream fileStream;
+	int index = 0;
+	fileStream.open((std::string)fileDialouge.GetPath());
+	if (fileStream.is_open()) {
+		while (!fileStream.eof()) {
+			std::getline(fileStream, buffer);
+			if (buffer.size() == 0) { break; }
+			if (buffer.at(0) == '!') { continue; }
+			if (gameBoard.size() == 0) {
+				gameBoard.resize(buffer.size());
+				for (int i = 0; i < buffer.size(); i++) {
+					gameBoard[i].resize(buffer.size());
+				}
+			}
+			for (int i = 0; i < buffer.size(); i++) {
+				if (buffer[i] == '*') {
+					gameBoard[i][index] = true;
+				}
+				else {
+					gameBoard[i][index] = false;
+				}
+			}
+			index++;
+		}
+		fileStream.close();
+		settings.gridSize = gameBoard.size();
+		for (int i = 0; i < gameBoard.size(); i++) {
+			for (int j = 0; j < gameBoard.size(); j++) {
+				if (gameBoard[i][j]) {
+					livingCells++;
+				}
+			}
+		}
+	}
+	event.Skip();
+}
+
+void MainWindow::saveEvent(wxCommandEvent& event)
+{
+	event.Skip();
+}
+
+void MainWindow::saveAsEvent(wxCommandEvent& event)
+{
+	wxFileDialog fileDialouge(this, "Save File", wxEmptyString, wxEmptyString, "Game of Life (*.cells) | *.cells", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+	if (fileDialouge.ShowModal() == wxID_CANCEL) {
+		return;
+	}
+	std::ofstream fileStream;
+	fileStream.open((std::string)fileDialouge.GetPath());
+	if (fileStream.is_open()) {
+		for (int i = 0; i < gameBoard.size(); i++) {
+			for (int j = 0; j < gameBoard.size(); j++) {
+				if (gameBoard[i][j]) {
+					fileStream << '*';
+				}
+				else {
+					fileStream << '.';
+				}
+			}
+			fileStream << '\n';
+		}
+		fileStream.close();
+	}
+	event.Skip();
+}
+
+void MainWindow::exitEvent(wxCommandEvent& event)
+{
+	Close();
+	event.Skip();
+}
+
+void MainWindow::resetSettingsEvent(wxCommandEvent& event)
+{
+	settings.resetToDefault();
 	Refresh();
 	event.Skip();
 }

@@ -41,4 +41,11 @@ private:
 	wxMenu* randomizeMenu = nullptr; //randomize menu (one of many)
 	void randomTimeEvent(wxCommandEvent&); //randomize with time event
 	void randomSeedEvent(wxCommandEvent&); //randomize with seed event
+	wxMenu* fileMenu = nullptr; //file menu (one of many)
+	void newEvent(wxCommandEvent&); //new file event
+	void openEvent(wxCommandEvent&); //open file event
+	void saveEvent(wxCommandEvent&); //save event
+	void saveAsEvent(wxCommandEvent&); //save as event
+	void exitEvent(wxCommandEvent&); //exit event
+	void resetSettingsEvent(wxCommandEvent&); //reset settings to default event
 };
