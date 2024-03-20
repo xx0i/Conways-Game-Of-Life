@@ -19,7 +19,7 @@ SettingsDialogUI::SettingsDialogUI(wxWindow* parent, wxWindowID id, const wxStri
 
 	wxBoxSizer* intervalSpinCtrl = new wxBoxSizer(wxHORIZONTAL);
 	wxStaticText* intervalControl = new wxStaticText(this, wxID_ANY, "Timer Interval\nin miliseconds:");
-	intervalControl->Move(wxPoint(15, 55));
+	intervalControl->Move(wxPoint(10, 55));
 	intervalTimeSpinCtrl = new wxSpinCtrl(this, 14210, std::to_string(settings->milisec4timer), wxPoint(130, 55), wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000, settings->milisec4timer, "wxSpinCtrlInterval");
 
 	//paint control

@@ -48,4 +48,9 @@ private:
 	void saveAsEvent(wxCommandEvent&); //save as event
 	void exitEvent(wxCommandEvent&); //exit event
 	void resetSettingsEvent(wxCommandEvent&); //reset settings to default event
+	wxMenuItem* finite = nullptr; //one of the checkable options in the view menu
+	wxMenuItem* toroidal = nullptr; //one of the checkable options in the view menu
+	void finiteEvent(wxCommandEvent&); //finite universe selection event
+	void toroidalEvent(wxCommandEvent&); //toroidal universe selection event
+	std::string saveFile;
 };

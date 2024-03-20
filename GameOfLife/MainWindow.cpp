@@ -25,6 +25,8 @@ EVT_MENU(wxID_SAVE, MainWindow::saveEvent)
 EVT_MENU(wxID_SAVEAS, MainWindow::saveAsEvent)
 EVT_MENU(19012, MainWindow::exitEvent)
 EVT_MENU(19882, MainWindow::resetSettingsEvent)
+EVT_MENU(13340, MainWindow::finiteEvent)
+EVT_MENU(11242, MainWindow::toroidalEvent)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
@@ -62,6 +64,12 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	showNeighbourCount = new wxMenuItem(viewMenu, 17902, "Show Neighbour Count", wxEmptyString, wxITEM_CHECK);
 	showNeighbourCount->SetCheckable(true);
 	viewMenu->Append(showNeighbourCount);
+	finite = new wxMenuItem(viewMenu, 13340, "Finite", wxEmptyString, wxITEM_CHECK);
+	finite->SetCheckable(true);
+	viewMenu->Append(finite);
+	toroidal = new wxMenuItem(viewMenu, 11242, "Toroidal", wxEmptyString, wxITEM_CHECK);
+	toroidal->SetCheckable(true);
+	viewMenu->Append(toroidal);
 	menuBar->Append(viewMenu, "View");
 	//randomize menu
 	randomizeMenu = new wxMenu();
@@ -150,12 +158,32 @@ int MainWindow::neighbourCount(int row, int col)
 	for (int i = (row - 1); i <= (row + 1); i++) {
 		for (int j = (col - 1); j <= (col + 1); j++) {
 
-
-			if (i < 0 || i >= settings.gridSize || j < 0 || j >= settings.gridSize || (i == row && j == col) || (!gameBoard[i][j])) {
-				continue;
+			if (settings.isFiniteUniverse) {
+				if (i < 0 || i >= settings.gridSize || j < 0 || j >= settings.gridSize || (i == row && j == col) || (!gameBoard[i][j])) {
+					continue;
+				}
+				else if (gameBoard[i][j]) {
+					livingNeighbors++;
+				}
 			}
-			else if (gameBoard[i][j]) {
-				livingNeighbors++;
+			else {
+				int newI = i;
+				int newJ = j;
+				if (i < 0) {
+					newI = settings.gridSize - 1;
+				}
+				if (j < 0) {
+					newJ = settings.gridSize - 1;
+				}
+				if (i >= settings.gridSize) {
+					newI = 0;
+				}
+				if (j >= settings.gridSize) {
+					newJ = 0;
+				}
+				if (gameBoard[newI][newJ] && !(i == row && j == col)) {
+					livingNeighbors++;
+				}
 			}
 		}
 	}
@@ -238,6 +266,8 @@ void MainWindow::showNeighbourCountEvent(wxCommandEvent& event)
 void MainWindow::refreshMenuItems()
 {
 	showNeighbourCount->Check(settings.isShowNeighbourCount);
+	finite->Check(settings.isFiniteUniverse);
+	toroidal->Check(!settings.isFiniteUniverse);
 	settings.saveData();
 }
 
@@ -256,6 +286,7 @@ void MainWindow::randomTimeEvent(wxCommandEvent& event)
 			}
 		}
 	}
+	statusBarUpdate();
 	Refresh();
 	event.Skip();
 }
@@ -264,7 +295,7 @@ void MainWindow::randomSeedEvent(wxCommandEvent& event)
 {
 	livingCells = 0;
 
-	long seed = wxGetNumberFromUser("Seed", "Enter Seed:", "Randomize", (rand() % (1710527999 - 1710527000 + 1) + 1710527000), 0, LONG_MAX, this, wxDefaultPosition);
+	long seed = wxGetNumberFromUser("Seed", "Enter Seed:", "Randomize", (time(NULL)), 0, LONG_MAX, this, wxDefaultPosition);
 
 	srand(seed);
 
@@ -277,12 +308,19 @@ void MainWindow::randomSeedEvent(wxCommandEvent& event)
 			}
 		}
 	}
+	statusBarUpdate();
 	Refresh();
 	event.Skip();
 }
 
 void MainWindow::newEvent(wxCommandEvent& event)
 {
+	settings.resetToDefault();
+	clearEvent(event);
+	saveFile.clear();
+	statusBarUpdate();
+	refreshMenuItems();
+	Refresh();
 	event.Skip();
 }
 
@@ -336,11 +374,33 @@ void MainWindow::openEvent(wxCommandEvent& event)
 			}
 		}
 	}
+	statusBarUpdate();
 	event.Skip();
 }
 
 void MainWindow::saveEvent(wxCommandEvent& event)
 {
+	if (!saveFile.empty()) {
+		std::ofstream fileStream;
+		fileStream.open(saveFile);
+		if (fileStream.is_open()) {
+			for (int i = 0; i < gameBoard.size(); i++) {
+				for (int j = 0; j < gameBoard.size(); j++) {
+					if (gameBoard[j][i]) {
+						fileStream << '*';
+					}
+					else {
+						fileStream << '.';
+					}
+				}
+				fileStream << '\n';
+			}
+			fileStream.close();
+		}
+	}
+	else {
+		saveAsEvent(event);
+	}
 	event.Skip();
 }
 
@@ -351,12 +411,13 @@ void MainWindow::saveAsEvent(wxCommandEvent& event)
 	if (fileDialouge.ShowModal() == wxID_CANCEL) {
 		return;
 	}
+	saveFile = (std::string)fileDialouge.GetPath();
 	std::ofstream fileStream;
-	fileStream.open((std::string)fileDialouge.GetPath());
+	fileStream.open(saveFile);
 	if (fileStream.is_open()) {
 		for (int i = 0; i < gameBoard.size(); i++) {
 			for (int j = 0; j < gameBoard.size(); j++) {
-				if (gameBoard[i][j]) {
+				if (gameBoard[j][i]) {
 					fileStream << '*';
 				}
 				else {
@@ -379,6 +440,22 @@ void MainWindow::exitEvent(wxCommandEvent& event)
 void MainWindow::resetSettingsEvent(wxCommandEvent& event)
 {
 	settings.resetToDefault();
+	settings.saveData();
 	Refresh();
+	refreshMenuItems();
+	event.Skip();
+}
+
+void MainWindow::finiteEvent(wxCommandEvent& event)
+{
+	settings.isFiniteUniverse = true;
+	refreshMenuItems();
+	event.Skip();
+}
+
+void MainWindow::toroidalEvent(wxCommandEvent& event)
+{
+	settings.isFiniteUniverse = false;
+	refreshMenuItems();
 	event.Skip();
 }

@@ -58,6 +58,7 @@ struct Settings
 		}
 	}
 	bool isShowNeighbourCount = true; //show neighbour count
+	bool isFiniteUniverse = true; //manages universe type
 
 	//reset to default
 	void resetToDefault() {
@@ -73,5 +74,8 @@ struct Settings
 
 		gridSize = 15;
 		milisec4timer = 50;
+
+		isShowNeighbourCount = true;
+		isFiniteUniverse = true;
 	}
 };
