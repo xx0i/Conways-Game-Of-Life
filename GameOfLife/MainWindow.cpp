@@ -333,38 +333,45 @@ void MainWindow::openEvent(wxCommandEvent& event)
 	}
 	for (int i = 0; i < gameBoard.size(); i++) {
 		gameBoard[i].clear();
+		neighbours[i].clear();
 		gameBoard.resize(0);
+		neighbours.resize(0);
 	}
 	gameBoard.clear();
+	neighbours.clear();
 	gameBoard.resize(0);
+	neighbours.resize(0);
 	livingCells = 0;
 
 	std::string buffer;
 	std::ifstream fileStream;
-	int index = 0;
+	std::vector<std::vector<bool>> openVector;
+	openVector.resize(0);
 	fileStream.open((std::string)fileDialouge.GetPath());
 	if (fileStream.is_open()) {
 		while (!fileStream.eof()) {
+			std::vector<bool> temp;
 			std::getline(fileStream, buffer);
 			if (buffer.size() == 0) { break; }
 			if (buffer.at(0) == '!') { continue; }
-			if (gameBoard.size() == 0) {
-				gameBoard.resize(buffer.size());
-				for (int i = 0; i < buffer.size(); i++) {
-					gameBoard[i].resize(buffer.size());
-				}
-			}
 			for (int i = 0; i < buffer.size(); i++) {
 				if (buffer[i] == '*') {
-					gameBoard[i][index] = true;
+					temp.push_back(true);
 				}
 				else {
-					gameBoard[i][index] = false;
+					temp.push_back(false);
 				}
 			}
-			index++;
+			openVector.push_back(temp);
 		}
 		fileStream.close();
+		gameBoard.resize(openVector.size());
+		neighbours.resize(gameBoard.size());
+		for (int i = 0; i < gameBoard.size(); i++) {
+			gameBoard[i].resize(openVector[i].size());
+			neighbours[i].resize(gameBoard[i].size());
+		}
+		gameBoard.swap(openVector);
 		settings.gridSize = gameBoard.size();
 		for (int i = 0; i < gameBoard.size(); i++) {
 			for (int j = 0; j < gameBoard.size(); j++) {
@@ -386,7 +393,7 @@ void MainWindow::saveEvent(wxCommandEvent& event)
 		if (fileStream.is_open()) {
 			for (int i = 0; i < gameBoard.size(); i++) {
 				for (int j = 0; j < gameBoard.size(); j++) {
-					if (gameBoard[j][i]) {
+					if (gameBoard[i][j]) {
 						fileStream << '*';
 					}
 					else {
@@ -417,7 +424,7 @@ void MainWindow::saveAsEvent(wxCommandEvent& event)
 	if (fileStream.is_open()) {
 		for (int i = 0; i < gameBoard.size(); i++) {
 			for (int j = 0; j < gameBoard.size(); j++) {
-				if (gameBoard[j][i]) {
+				if (gameBoard[i][j]) {
 					fileStream << '*';
 				}
 				else {
