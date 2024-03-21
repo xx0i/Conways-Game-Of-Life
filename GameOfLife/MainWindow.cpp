@@ -27,6 +27,9 @@ EVT_MENU(19012, MainWindow::exitEvent)
 EVT_MENU(19882, MainWindow::resetSettingsEvent)
 EVT_MENU(13340, MainWindow::finiteEvent)
 EVT_MENU(11242, MainWindow::toroidalEvent)
+EVT_MENU(17892, MainWindow::importEvent)
+EVT_MENU(19200, MainWindow::showGridEvent)
+EVT_MENU(11992, MainWindow::gridLinesEvent)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
@@ -58,6 +61,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	fileMenu->Append(wxID_SAVE);
 	fileMenu->Append(wxID_SAVEAS);
 	fileMenu->Append(19012, "Exit");
+	fileMenu->Append(17892, "Import");
 	menuBar->Append(fileMenu, "File");
 	//view menu
 	viewMenu = new wxMenu();
@@ -70,6 +74,12 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	toroidal = new wxMenuItem(viewMenu, 11242, "Toroidal", wxEmptyString, wxITEM_CHECK);
 	toroidal->SetCheckable(true);
 	viewMenu->Append(toroidal);
+	showGrid = new wxMenuItem(viewMenu, 19200, "Show Grid", wxEmptyString, wxITEM_CHECK);
+	showGrid->SetCheckable(true);
+	viewMenu->Append(showGrid);
+	gridLines = new wxMenuItem(viewMenu, 11992, "Show 10 x10 Grid Lines", wxEmptyString, wxITEM_CHECK);
+	gridLines->SetCheckable(true);
+	viewMenu->Append(gridLines);
 	menuBar->Append(viewMenu, "View");
 	//randomize menu
 	randomizeMenu = new wxMenu();
@@ -268,6 +278,8 @@ void MainWindow::refreshMenuItems()
 	showNeighbourCount->Check(settings.isShowNeighbourCount);
 	finite->Check(settings.isFiniteUniverse);
 	toroidal->Check(!settings.isFiniteUniverse);
+	showGrid->Check(settings.isShowGrid);
+	gridLines->Check(settings.isGridLines);
 	settings.saveData();
 }
 
@@ -464,5 +476,70 @@ void MainWindow::toroidalEvent(wxCommandEvent& event)
 {
 	settings.isFiniteUniverse = false;
 	refreshMenuItems();
+	event.Skip();
+}
+
+void MainWindow::importEvent(wxCommandEvent& event)
+{
+
+	wxFileDialog fileDialouge(this, "Open File", wxEmptyString, wxEmptyString, "Game of Life (*.cells) | *.cells", wxFD_OPEN);
+
+	if (fileDialouge.ShowModal() == wxID_CANCEL) {
+		return;
+	}
+
+	livingCells = 0;
+
+	std::string buffer;
+	std::ifstream fileStream;
+	std::vector<std::vector<bool>> openVector;
+	openVector.resize(0);
+	fileStream.open((std::string)fileDialouge.GetPath());
+	if (fileStream.is_open()) {
+		while (!fileStream.eof()) {
+			std::vector<bool> temp;
+			std::getline(fileStream, buffer);
+			if (buffer.size() == 0) { break; }
+			if (buffer.at(0) == '!') { continue; }
+			for (int i = 0; i < buffer.size(); i++) {
+				if (i == settings.gridSize) {
+					break;
+				}
+				if (buffer[i] == '*') {
+					temp.push_back(true);
+				}
+				else {
+					temp.push_back(false);
+				}
+			}
+			openVector.push_back(temp);
+		}
+		fileStream.close();
+		gameBoard.swap(openVector);
+		for (int i = 0; i < gameBoard.size(); i++) {
+			for (int j = 0; j < gameBoard.size(); j++) {
+				if (gameBoard[i][j]) {
+					livingCells++;
+				}
+			}
+		}
+	}
+	statusBarUpdate();
+	event.Skip();
+}
+
+void MainWindow::showGridEvent(wxCommandEvent& event)
+{
+	settings.isShowGrid = showGrid->IsChecked();
+	refreshMenuItems();
+	drawingPanel->Refresh();
+	event.Skip();
+}
+
+void MainWindow::gridLinesEvent(wxCommandEvent& event)
+{
+	settings.isGridLines = gridLines->IsChecked();
+	refreshMenuItems();
+	drawingPanel->Refresh();
 	event.Skip();
 }

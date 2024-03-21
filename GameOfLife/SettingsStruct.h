@@ -59,6 +59,8 @@ struct Settings
 	}
 	bool isShowNeighbourCount = true; //show neighbour count
 	bool isFiniteUniverse = true; //manages universe type
+	bool isShowGrid = true; //manages whether or not the grid shows
+	bool isGridLines = true; //manages whether or not the 10x10 grid lines shows
 
 	//reset to default
 	void resetToDefault() {
@@ -77,5 +79,7 @@ struct Settings
 
 		isShowNeighbourCount = true;
 		isFiniteUniverse = true;
+		isShowGrid = true;
+		isGridLines = true;
 	}
 };

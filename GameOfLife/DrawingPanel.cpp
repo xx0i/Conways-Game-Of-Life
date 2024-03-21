@@ -26,7 +26,13 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 	if (!graphicsContext) {
 		return;
 	}
-	graphicsContext->SetPen(*wxBLACK);
+	if (settings->isShowGrid) {
+		wxColour* colour = new wxColour(0,0,0,100);
+		graphicsContext->SetPen(*colour);
+	}
+	else {
+		graphicsContext->SetPen(wxTransparentColour);
+	}
 
 	//creating the grid
 	wxSize panelSize = this->GetClientSize();
@@ -61,6 +67,21 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 					graphicsContext->DrawText(cellText, (i * cellWidth) + cellWidth / 2 - textWidth / 2, (j * cellHeight) + cellHeight / 2 - textHeight / 2);
 				}
 			}
+		}
+	}
+	if (settings->isGridLines) {
+		int numLines = settings->gridSize / 10;
+		wxPen* thickPen = new wxPen(*wxBLACK, 4);
+		dc.SetPen(*thickPen);
+		for (int i = 0; i < numLines; i++) {
+			wxPoint vStart(cellWidth * (i * 10), 0);
+			wxPoint vEnd(cellWidth * (i * 10), this->GetSize().y);
+			dc.DrawLine(vStart, vEnd);
+		}
+		for (int i = 0; i < numLines; i++) {
+			wxPoint vStart(0, cellHeight * (i * 10));
+			wxPoint vEnd(this->GetSize().x, cellHeight * (i * 10));
+			dc.DrawLine(vStart, vEnd);
 		}
 	}
 	delete graphicsContext;
