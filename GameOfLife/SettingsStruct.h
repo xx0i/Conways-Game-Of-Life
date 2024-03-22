@@ -61,6 +61,7 @@ struct Settings
 	bool isFiniteUniverse = true; //manages universe type
 	bool isShowGrid = true; //manages whether or not the grid shows
 	bool isGridLines = true; //manages whether or not the 10x10 grid lines shows
+	bool isShowHUD = true; //manages whether or not the hud shows
 
 	//reset to default
 	void resetToDefault() {
@@ -81,5 +82,6 @@ struct Settings
 		isFiniteUniverse = true;
 		isShowGrid = true;
 		isGridLines = true;
+		isShowHUD = true;
 	}
 };

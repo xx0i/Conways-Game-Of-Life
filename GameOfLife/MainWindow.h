@@ -58,4 +58,6 @@ private:
 	wxMenuItem* gridLines = nullptr; //one of the checkable options in the view menu
 	void showGridEvent(wxCommandEvent&); //show grid event
 	void gridLinesEvent(wxCommandEvent&); //show 10x10 grid lines event
+	wxMenuItem* showHUD = nullptr; //one of the checkable options in the view menu
+	void showHUDEvent(wxCommandEvent&); //show HUD event
 };

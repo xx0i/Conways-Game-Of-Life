@@ -84,6 +84,32 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 			dc.DrawLine(vStart, vEnd);
 		}
 	}
+	if (settings->isShowHUD) {
+		wxSize panelSize = this->GetSize();
+		int cellWidth = panelSize.GetWidth();
+		int cellHeight = panelSize.GetHeight();
+
+		graphicsContext->SetFont(wxFontInfo(10), *wxRED); //text font
+		double x;
+		double y;
+		wxString windowSize = "Window Size: " + std::to_string(cellWidth) + "x" + std::to_string(cellHeight);
+		std::string boundary;
+		if (settings->isFiniteUniverse) {
+			boundary = "Finite";
+		}
+		else {
+			boundary = "Toroidal";
+		}
+		wxString boundaryType = "Boundary Type: " + boundary;
+		wxString livingCells = "Living Cells: " + std::to_string(livingCellsRef);
+		wxString generation = "Generation: " + std::to_string(generationRef);
+		wxString timerInterval = "Timer Interval(ms): " + std::to_string(settings->milisec4timer);
+		wxString gridSize = "Grid Size: " + std::to_string(settings->gridSize);
+		wxString text = windowSize +  '\n' + boundaryType + '\n' + livingCells + '\n' + generation + '\n' + gridSize + '\n' + timerInterval;
+		graphicsContext->GetTextExtent(text, &x, &y);
+		graphicsContext->DrawText(text, 5, GetSize().y - y - 5);
+	}
+
 	delete graphicsContext;
 }
 

@@ -30,6 +30,7 @@ EVT_MENU(11242, MainWindow::toroidalEvent)
 EVT_MENU(17892, MainWindow::importEvent)
 EVT_MENU(19200, MainWindow::showGridEvent)
 EVT_MENU(11992, MainWindow::gridLinesEvent)
+EVT_MENU(13322, MainWindow::showHUDEvent)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(500, 500))
@@ -80,6 +81,9 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	gridLines = new wxMenuItem(viewMenu, 11992, "Show 10 x10 Grid Lines", wxEmptyString, wxITEM_CHECK);
 	gridLines->SetCheckable(true);
 	viewMenu->Append(gridLines);
+	showHUD = new wxMenuItem(viewMenu, 13322, "Show HUD", wxEmptyString, wxITEM_CHECK);
+	showHUD->SetCheckable(true);
+	viewMenu->Append(showHUD);
 	menuBar->Append(viewMenu, "View");
 	//randomize menu
 	randomizeMenu = new wxMenu();
@@ -280,6 +284,7 @@ void MainWindow::refreshMenuItems()
 	toroidal->Check(!settings.isFiniteUniverse);
 	showGrid->Check(settings.isShowGrid);
 	gridLines->Check(settings.isGridLines);
+	showHUD->Check(settings.isShowHUD);
 	settings.saveData();
 }
 
@@ -469,6 +474,7 @@ void MainWindow::finiteEvent(wxCommandEvent& event)
 {
 	settings.isFiniteUniverse = true;
 	refreshMenuItems();
+	drawingPanel->Refresh();
 	event.Skip();
 }
 
@@ -476,6 +482,7 @@ void MainWindow::toroidalEvent(wxCommandEvent& event)
 {
 	settings.isFiniteUniverse = false;
 	refreshMenuItems();
+	drawingPanel->Refresh();
 	event.Skip();
 }
 
@@ -539,6 +546,14 @@ void MainWindow::showGridEvent(wxCommandEvent& event)
 void MainWindow::gridLinesEvent(wxCommandEvent& event)
 {
 	settings.isGridLines = gridLines->IsChecked();
+	refreshMenuItems();
+	drawingPanel->Refresh();
+	event.Skip();
+}
+
+void MainWindow::showHUDEvent(wxCommandEvent& event)
+{
+	settings.isShowHUD = showHUD->IsChecked();
 	refreshMenuItems();
 	drawingPanel->Refresh();
 	event.Skip();
