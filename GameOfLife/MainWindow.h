@@ -52,7 +52,7 @@ private:
 	wxMenuItem* toroidal = nullptr; //one of the checkable options in the view menu
 	void finiteEvent(wxCommandEvent&); //finite universe selection event
 	void toroidalEvent(wxCommandEvent&); //toroidal universe selection event
-	std::string saveFile;
+	std::string saveFile; //string for saving the path
 	void importEvent(wxCommandEvent&); //import file event
 	wxMenuItem* showGrid = nullptr; //one of the checkable options in the view menu
 	wxMenuItem* gridLines = nullptr; //one of the checkable options in the view menu

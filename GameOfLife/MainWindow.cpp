@@ -465,6 +465,7 @@ void MainWindow::resetSettingsEvent(wxCommandEvent& event)
 {
 	settings.resetToDefault();
 	settings.saveData();
+	gridInitialize();
 	Refresh();
 	refreshMenuItems();
 	event.Skip();
@@ -489,7 +490,7 @@ void MainWindow::toroidalEvent(wxCommandEvent& event)
 void MainWindow::importEvent(wxCommandEvent& event)
 {
 
-	wxFileDialog fileDialouge(this, "Open File", wxEmptyString, wxEmptyString, "Game of Life (*.cells) | *.cells", wxFD_OPEN);
+	wxFileDialog fileDialouge(this, "Import File", wxEmptyString, wxEmptyString, "Game of Life (*.cells) | *.cells", wxFD_OPEN);
 
 	if (fileDialouge.ShowModal() == wxID_CANCEL) {
 		return;

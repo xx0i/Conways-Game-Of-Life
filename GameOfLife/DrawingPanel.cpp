@@ -71,16 +71,16 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 	}
 	if (settings->isGridLines) {
 		int numLines = settings->gridSize / 10;
-		wxPen* thickPen = new wxPen(*wxBLACK, 4);
+		wxPen* thickPen = new wxPen(*wxBLACK, 3);
 		dc.SetPen(*thickPen);
 		for (int i = 0; i < numLines; i++) {
-			wxPoint vStart(cellWidth * (i * 10), 0);
-			wxPoint vEnd(cellWidth * (i * 10), this->GetSize().y);
+			wxPoint vStart(cellWidth * (i + 1) * 10, 0);
+			wxPoint vEnd(cellWidth * (i + 1) * 10, this->GetSize().y);
 			dc.DrawLine(vStart, vEnd);
 		}
 		for (int i = 0; i < numLines; i++) {
-			wxPoint vStart(0, cellHeight * (i * 10));
-			wxPoint vEnd(this->GetSize().x, cellHeight * (i * 10));
+			wxPoint vStart(0, cellHeight * (i + 1) * 10);
+			wxPoint vEnd(this->GetSize().x, cellHeight * (i + 1) * 10);
 			dc.DrawLine(vStart, vEnd);
 		}
 	}

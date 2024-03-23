@@ -16,7 +16,7 @@ struct Settings
 	unsigned int deadBlue = 255;
 	unsigned int deadAlpha = 255;
 
-	int gridSize = 15; //grid size variable - default 15
+	int gridSize = 30; //grid size variable - default 30 (looks better with grid lines)
 	int milisec4timer = 50; //interval for time variable - default 50
 
 	//accessor methods to get wxColour based on the RGB and Alpha values
@@ -75,7 +75,7 @@ struct Settings
 		deadBlue = 255;
 		deadAlpha = 255;
 
-		gridSize = 15;
+		gridSize = 30;
 		milisec4timer = 50;
 
 		isShowNeighbourCount = true;
