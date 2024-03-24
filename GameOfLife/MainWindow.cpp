@@ -398,6 +398,7 @@ void MainWindow::openEvent(wxCommandEvent& event)
 			}
 		}
 	}
+	Refresh();
 	statusBarUpdate();
 	event.Skip();
 }
@@ -497,6 +498,7 @@ void MainWindow::importEvent(wxCommandEvent& event)
 	}
 
 	livingCells = 0;
+	int size;
 
 	std::string buffer;
 	std::ifstream fileStream;
@@ -509,8 +511,14 @@ void MainWindow::importEvent(wxCommandEvent& event)
 			std::getline(fileStream, buffer);
 			if (buffer.size() == 0) { break; }
 			if (buffer.at(0) == '!') { continue; }
-			for (int i = 0; i < buffer.size(); i++) {
-				if (i == settings.gridSize) {
+			if (buffer.size() < gameBoard.size()) {
+				size = buffer.size();
+			}
+			else {
+				size = gameBoard.size();
+			}
+			for (int i = 0; i < size; i++) {
+				if (i == size) {
 					break;
 				}
 				if (buffer[i] == '*') {
@@ -524,6 +532,8 @@ void MainWindow::importEvent(wxCommandEvent& event)
 		}
 		fileStream.close();
 		gameBoard.swap(openVector);
+		gridInitialize();
+
 		for (int i = 0; i < gameBoard.size(); i++) {
 			for (int j = 0; j < gameBoard.size(); j++) {
 				if (gameBoard[i][j]) {
@@ -532,6 +542,7 @@ void MainWindow::importEvent(wxCommandEvent& event)
 			}
 		}
 	}
+	Refresh();
 	statusBarUpdate();
 	event.Skip();
 }
