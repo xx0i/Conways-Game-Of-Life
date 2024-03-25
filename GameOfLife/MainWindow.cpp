@@ -61,8 +61,8 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 	fileMenu->Append(wxID_OPEN);
 	fileMenu->Append(wxID_SAVE);
 	fileMenu->Append(wxID_SAVEAS);
-	fileMenu->Append(19012, "Exit");
 	fileMenu->Append(17892, "Import");
+	fileMenu->Append(19012, "Exit");
 	menuBar->Append(fileMenu, "File");
 	//view menu
 	viewMenu = new wxMenu();
@@ -286,6 +286,7 @@ void MainWindow::refreshMenuItems()
 	gridLines->Check(settings.isGridLines);
 	showHUD->Check(settings.isShowHUD);
 	settings.saveData();
+	drawingPanel->Refresh();
 }
 
 void MainWindow::randomTimeEvent(wxCommandEvent& event)
