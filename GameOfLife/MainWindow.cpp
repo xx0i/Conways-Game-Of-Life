@@ -532,8 +532,25 @@ void MainWindow::importEvent(wxCommandEvent& event)
 			openVector.push_back(temp);
 		}
 		fileStream.close();
-		gameBoard.swap(openVector);
-		gridInitialize();
+
+		//OPTIONAL CENTERING
+		int height = openVector.size();
+		int width = openVector[0].size();
+		if (height > settings.gridSize || width > settings.gridSize) {
+			settings.gridSize = (height > width ? height : width) + 10;
+			gridInitialize();
+		}
+
+		int paddingHeight = (settings.gridSize - height) / 2;
+		int paddingWidth = (settings.gridSize - width) / 2;
+
+		if (paddingWidth < 0 || paddingHeight < 0) { return; }
+
+		for (int i = 0; i < openVector.size(); i++) {
+			for (int j = 0; j < openVector.size(); j++) {
+				gameBoard[i + paddingHeight][j + paddingWidth] = openVector[i][j];
+			}
+		}
 
 		for (int i = 0; i < gameBoard.size(); i++) {
 			for (int j = 0; j < gameBoard.size(); j++) {

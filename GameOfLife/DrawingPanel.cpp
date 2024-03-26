@@ -27,11 +27,12 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 		return;
 	}
 	if (settings->isShowGrid) {
-		wxColour* colour = new wxColour(0,0,0,100);
+		wxColour* colour = new wxColour(0, 0, 0, 100);
 		graphicsContext->SetPen(*colour);
 	}
 	else {
 		graphicsContext->SetPen(wxTransparentColour);
+		//increase the size of rectangles by one each direction
 	}
 
 	//creating the grid
@@ -39,13 +40,13 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 	float cellWidth = panelSize.GetWidth() / (float)settings->gridSize;
 	float cellHeight = panelSize.GetHeight() / (float)settings->gridSize;
 
-	graphicsContext->SetFont(wxFontInfo(8), *wxRED); //text font
+	graphicsContext->SetFont(wxFontInfo((cellHeight * 0.5)), *wxRED); //text font
 
 	for (int i = 0; i < settings->gridSize; i++) {
 		for (int j = 0; j < settings->gridSize; j++) {
 			//calculating cell location
-			int x = i * cellWidth;
-			int y = j * cellHeight;
+			int x = i * cellWidth - 1;
+			int y = j * cellHeight - 1;
 
 			//rectangle coulour based on true or false
 			if (gameBoardRef[i][j]) {
@@ -55,7 +56,7 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 				graphicsContext->SetBrush(settings->GetDeadColour());
 			}
 
-			graphicsContext->DrawRectangle(x, y, cellWidth, cellHeight);
+			graphicsContext->DrawRectangle(x, y, cellWidth + 2, cellHeight + 2);
 
 			//show neighbour count drawing text
 			if (settings->isShowNeighbourCount) {
@@ -89,7 +90,7 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 		int cellWidth = panelSize.GetWidth();
 		int cellHeight = panelSize.GetHeight();
 
-		graphicsContext->SetFont(wxFontInfo(10), *wxRED); //text font
+		graphicsContext->SetFont(wxFontInfo((cellHeight * 0.025)), *wxRED); //text font
 		double x;
 		double y;
 		wxString windowSize = "Window Size: " + std::to_string(cellWidth) + "x" + std::to_string(cellHeight);
@@ -105,7 +106,7 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 		wxString generation = "Generation: " + std::to_string(generationRef);
 		wxString timerInterval = "Timer Interval(ms): " + std::to_string(settings->milisec4timer);
 		wxString gridSize = "Grid Size: " + std::to_string(settings->gridSize);
-		wxString text = windowSize +  '\n' + boundaryType + '\n' + livingCells + '\n' + generation + '\n' + gridSize + '\n' + timerInterval;
+		wxString text = windowSize + '\n' + boundaryType + '\n' + livingCells + '\n' + generation + '\n' + gridSize + '\n' + timerInterval;
 		graphicsContext->GetTextExtent(text, &x, &y);
 		graphicsContext->DrawText(text, 5, GetSize().y - y - 5);
 	}
