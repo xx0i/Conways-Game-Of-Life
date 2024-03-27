@@ -304,6 +304,7 @@ void MainWindow::randomTimeEvent(wxCommandEvent& event)
 			}
 		}
 	}
+	liveNeighbourCountUpdate();
 	statusBarUpdate();
 	Refresh();
 	event.Skip();
@@ -326,6 +327,7 @@ void MainWindow::randomSeedEvent(wxCommandEvent& event)
 			}
 		}
 	}
+	liveNeighbourCountUpdate();
 	statusBarUpdate();
 	Refresh();
 	event.Skip();
@@ -587,4 +589,15 @@ void MainWindow::showHUDEvent(wxCommandEvent& event)
 	refreshMenuItems();
 	drawingPanel->Refresh();
 	event.Skip();
+}
+
+void MainWindow::liveNeighbourCountUpdate()
+{
+	if (neighbours.size() == 0) { return; }
+	for (int i = 0; i < settings.gridSize; i++) {
+		for (int j = 0; j < settings.gridSize; j++) {
+			neighbours[i][j] = neighbourCount(i,j);
+		}
+	}
+	Refresh();
 }

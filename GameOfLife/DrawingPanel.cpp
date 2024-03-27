@@ -1,6 +1,7 @@
 #include "DrawingPanel.h"
 #include "wx/graphics.h"
 #include "wx/dcbuffer.h"
+#include "MainWindow.h"
 
 //EVENT TABLE
 wxBEGIN_EVENT_TABLE(DrawingPanel, wxPanel)
@@ -8,7 +9,7 @@ EVT_PAINT(DrawingPanel::OnPaint)
 EVT_LEFT_UP(DrawingPanel::mouseEvent)
 wxEND_EVENT_TABLE()
 
-DrawingPanel::DrawingPanel(wxWindow* parent, wxSize size, std::vector<std::vector<bool>>& board, wxStatusBar*& statsBar, Settings* setting, int& livingCells, int& generation, std::vector<std::vector<int>>& neighbours) : wxPanel(parent, wxID_ANY, wxPoint(0, 0)), gameBoardRef(board), statusBarRef(statsBar), settings(setting), livingCellsRef(livingCells), generationRef(generation), neighboursRef(neighbours)
+DrawingPanel::DrawingPanel(MainWindow* parent, wxSize size, std::vector<std::vector<bool>>& board, wxStatusBar*& statsBar, Settings* setting, int& livingCells, int& generation, std::vector<std::vector<int>>& neighbours) : wxPanel(parent, wxID_ANY, wxPoint(0, 0)), parent(parent), gameBoardRef(board), statusBarRef(statsBar), settings(setting), livingCellsRef(livingCells), generationRef(generation), neighboursRef(neighbours)
 {
 	this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
@@ -139,7 +140,12 @@ void DrawingPanel::mouseEvent(wxMouseEvent& event)
 		livingCellsRef++;
 		statusBarUpdate();
 	}
-	Refresh();
+	if (settings->isShowNeighbourCount) {
+		parent->liveNeighbourCountUpdate();
+	}
+	else {
+		Refresh();
+	}
 }
 
 //same as MainWindow Status Bar Update - so that the living cell count will update as the user explicitly turns cells on or off
