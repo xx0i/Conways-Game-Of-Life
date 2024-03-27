@@ -36,12 +36,15 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 		//increase the size of rectangles by one each direction
 	}
 
+	wxColour* colour2 = new wxColour(0, 102, 204, 250); //colour for text font for showNeighbourCount (blue 1-2)
+	wxColour* colour3 = new wxColour(0, 153, 0, 250); //colour for text font for showNeighbourCount (green 3-4)
+	wxColour* colour4 = new wxColour(179, 0, 179, 250); //colour for text font for showNeighbourCount (purple 5-6)
+	wxColour* colour5 = new wxColour(255, 51, 153, 250); //colour for text font for showNeighbourCount (pink 7-8)
+
 	//creating the grid
 	wxSize panelSize = this->GetClientSize();
 	float cellWidth = panelSize.GetWidth() / (float)settings->gridSize;
 	float cellHeight = panelSize.GetHeight() / (float)settings->gridSize;
-
-	graphicsContext->SetFont(wxFontInfo((cellHeight * 0.5)), *wxRED); //text font
 
 	for (int i = 0; i < settings->gridSize; i++) {
 		for (int j = 0; j < settings->gridSize; j++) {
@@ -62,6 +65,22 @@ void DrawingPanel::OnPaint(wxPaintEvent&)
 			//show neighbour count drawing text
 			if (settings->isShowNeighbourCount) {
 				if (neighboursRef[i][j] > 0) {
+					if (neighboursRef[i][j] == 1 || neighboursRef[i][j] == 2) {
+						graphicsContext->SetFont(wxFontInfo((cellHeight * 0.5)), *colour2); //text font
+
+					}
+					else if (neighboursRef[i][j] == 3 || neighboursRef[i][j] == 4) {
+						graphicsContext->SetFont(wxFontInfo((cellHeight * 0.5)), *colour3); //text font
+
+					}
+					else if (neighboursRef[i][j] == 5 || neighboursRef[i][j] == 6) {
+						graphicsContext->SetFont(wxFontInfo((cellHeight * 0.5)), *colour4); //text font
+
+					}
+					else {
+						graphicsContext->SetFont(wxFontInfo((cellHeight * 0.5)), *colour5); //text font
+
+					}
 					wxString cellText = std::to_string(neighboursRef[i][j]);
 					double textWidth;
 					double textHeight;

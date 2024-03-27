@@ -274,6 +274,9 @@ void MainWindow::showNeighbourCountEvent(wxCommandEvent& event)
 {
 	settings.isShowNeighbourCount = showNeighbourCount->IsChecked();
 	refreshMenuItems();
+	if (showNeighbourCount->IsChecked()) {
+		liveNeighbourCountUpdate();
+	}
 	event.Skip();
 }
 

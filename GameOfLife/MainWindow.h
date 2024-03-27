@@ -12,7 +12,7 @@ public:
 	~MainWindow() { delete timer; } //destructor
 	void WindowResize(wxSizeEvent&); //resize event
 	void gridInitialize(); //grid initialize method
-	void liveNeighbourCountUpdate(); // live neighbour count update
+	void liveNeighbourCountUpdate(); //live neighbour count update
 
 private:
 	DrawingPanel* drawingPanel = nullptr; //DrawingPanel* - used to create a DrawingPanel that's a child of the MainWindow
